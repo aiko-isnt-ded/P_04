@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <title>Task Manager - Home</title>
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <!-- Bootstrap CSS v5.3.8 -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+            crossorigin="anonymous"/>
+
+        <style>
+            body {
+                background: linear-gradient(45deg,rgba(238, 174, 202, 1) 0%, rgba(163, 190, 212, 1) 100%);
+            }
+
+            @media (max-width: 767.98px) {
+                html {
+                    font-size: 90%;
+                }
+
+                .card {
+                    font-size: 0.9rem;
+                }
+
+                .card-title {
+                    font-size: 1.5rem !important;
+                }
+
+                .card-body {
+                    padding: 0.75rem;
+                }
+
+                .card img {
+                    width: 80px !important;
+                }
+            }
+        </style>
+
+        <!-- Icons -->
+        <script src="https://kit.fontawesome.com/98b9f9da5b.js" crossorigin="anonymous"></script>
+
+    </head>
+
+    <body>
+        <header>
+            <!-- Navigation Bar -->
+            <nav class="navbar navbar-expand-sm bg-light navbar-light">
+
+                <div class="container-fluid">
+                    <!-- Photo for Home Page -->
+                    <a class="navbar-brand" href="./home.html">
+                        <img src="https://github.com/aiko-isnt-ded/web-resources/blob/main/1P/balor-icon.png?raw=true" action="./home.html" style="width: 40px" class="rounded-pill">
+                    </a>
+
+                    <!-- Burger Menu -->
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            
+                            <!-- Navigation items -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="./tasks.html">Tasks</a>
+                            </li>
+
+                            <!-- Dropdown -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" id="navbarDropdown"  aria-expanded="false">
+                                    Labels</a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item label-alert" href="#">College</a></li>
+                                    <li><a class="dropdown-item label-alert" href="#">Work</a></li>
+                                    <li><a class="dropdown-item label-alert" href="#">Home</a></li>
+                                    <li><a class="dropdown-item label-alert" href="#">Social Life</a></li>
+                                    <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#newLabel"><i class="fas fa-plus"></i> Add New Label</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <!-- Search Bar -->
+                        <form class="d-flex">
+                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                            <button class="btn btn-primary" type="submit">Search</button>
+                        </form>
+
+                        <!-- Log Out Icon -->
+                        <a href="#" title="Log Out" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                            <i class="fas fa-sign-out-alt" style='font-size:24px'></i>
+                        </a>
+                        </div>
+                </div>
+
+                <!-- Log Out Modal -->
+                <div class="modal" id="logoutModal" tabindex="-1" >
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Log Out</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to log out?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <a href="./login.html">
+                            <button type="button" class="btn btn-primary">Accept</button>
+                        </a>
+                    </div>
+                    </div>
+                </div>
+                </div>
+
+                <!-- New Label Modal -->
+                <div class="modal" id="newLabel" tabindex="-1" >
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Create New Label</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Name</p>
+                        <input type="text" class="form-control" placeholder="Enter label name">
+                        <br>
+                        <p>Colour</p>
+                        <input type="color" class="form-control form-control-color" id="exampleColorInput" value="#563d7c" title="Choose your color">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary">Create Label</button>
+                    </div>
+                    </div>
+                </div>
+                </div>
+
+            </nav>
+        </header>
+        <main>
+            <br>
+
+            <div class="row g-3 mx-2">
+
+                <!-- Card Div 1 -->
+                <div class="col-12 col-md-6">
+                    <!-- User Profile -->
+                    <div class="card overflow-y-auto" style="height: 45vh;">
+                        <div class="card-body">
+                            <!-- Card Title -->
+                            <div class="border-bottom border-dark mb-2 border-2" style="border-color: #555 !important;">
+                                <p class="card-title fw-bold fs-3 mb-1">User Summary</p>
+                            </div>
+                            
+                            <!-- User Info -->
+                            <div class="d-flex align-items-center mb-2">
+                                <img src="https://github.com/aiko-isnt-ded/web-resources/blob/main/1P/balor-icon.png?raw=true" 
+                                class="rounded me-3" style="width: 140px; object-fit: cover;">
+                                <div>
+                                    <p class="card-text fw-bold mb-3">Balor Desmond</p>
+                                    <p class="card-text mb-3"><b>Completed Tasks Today:</b> 3</p>
+                                    <p class="card-text mb-3"><b>Pending Tasks Today:</b> 5</p>
+                                </div>
+                            </div>
+
+                            <!-- Summary -->
+                            <div>
+                                <p class="card-text fw-bold mb-1">Summary:</p>
+
+                                <p class="card-text mb-0">Balor is a user who has completed <b>3</b> tasks today. 
+                                They still have <b>5</b> pending tasks, so they have <b>37.5%</b> of their work done today.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Card Div 2 -->
+                <div class="col-12 col-md-6">
+                    <div class="card overflow-y-auto" style="height: 45vh;">
+                        <div class="card-body">
+
+                            <!-- Card Title -->
+                            <div class="border-bottom border-dark mb-2 border-2" style="border-color: #555 !important;">
+                                <p class="card-title fw-bold fs-3 mb-1">Today's Tasks</p>
+                            </div>
+
+                            <!-- Today's Tasks -->
+                            <div class="d-flex align-items-center mb-2">
+                                <table class="table table-hover table-primary">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col"><i class="fa-solid fa-check"></i></th>
+                                            <th scope="col">Task</th>
+                                            <th scope="col">Label</th>
+                                            <th scope="col">Date</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
+                                            <td>Wash Clothes</td>
+                                            <td><span class="badge rounded-pill bg-success">Home</span></td>
+                                            <td>06-09-2026</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
+                                            <td>Birthday Dinner</td>
+                                            <td><span class="badge rounded-pill bg-warning text-dark">Social Life</span></td>
+                                            <td>06-09-2026</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
+                                            <td>IyE Homework 8</td>
+                                            <td><span class="badge rounded-pill bg-primary">College</span></td>
+                                            <td>06-09-2026</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
+                                            <td>Groceries</td>
+                                            <td><span class="badge rounded-pill bg-success">Home</span></td>
+                                            <td>06-09-2026</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
+                                            <td>Call mom</td>
+                                            <td><span class="badge rounded-pill bg-warning text-dark">Social Life</span></td>
+                                            <td>06-09-2026</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Card Div 3 -->
+                <div class="col-12 col-md-6">
+                    <div class="card overflow-y-auto" style="height: 45vh;">
+                        <div class="card-body">
+
+                            <!-- Card Title -->
+                            <div class="border-bottom border-dark mb-2 border-2" style="border-color: #555 !important;">
+                                <p class="card-title fw-bold fs-3 mb-1">Pending Tasks by Label</p>
+                            </div>
+                            
+                            <!-- Fake Label Filter -->
+                            <div class="d-flex justify-content-evenly mb-2">
+                                <span class="badge rounded-pill bg-success" style="opacity: 0.6;">Home</span>
+                                <span class="badge rounded-pill bg-danger" style="opacity: 0.6;">Work</span>
+                                <span class="badge rounded-pill bg-primary">College</span>
+                                <span class="badge rounded-pill bg-warning text-dark" style="opacity: 0.6;">Social Life</span>
+                            </div>
+
+                            <!-- Pending Tasks by Label -->
+                            <div class="d-flex align-items-center mb-2">
+                                <table class="table table-hover table-warning">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col"><i class="fa-solid fa-check"></i></th>
+                                            <th scope="col">Task</th>
+                                            <th scope="col">Label</th>
+                                            <th scope="col">Date</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
+                                            <td>IyE Homework 8</td>
+                                            <td><span class="badge rounded-pill bg-primary">College</span></td>
+                                            <td>06-09-2026</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
+                                            <td>OOP Homework 3</td>
+                                            <td><span class="badge rounded-pill bg-primary">College</span></td>
+                                            <td>07-09-2026</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
+                                            <td>Web Homework 5</td>
+                                            <td><span class="badge rounded-pill bg-primary">College</span></td>
+                                            <td>07-09-2026</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
+                                            <td>Project Report</td>
+                                            <td><span class="badge rounded-pill bg-primary">College</span></td>
+                                            <td>08-09-2026</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
+                                            <td>AMIM Research</td>
+                                            <td><span class="badge rounded-pill bg-primary">College</span></td>
+                                            <td>08-09-2026</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
+                                            <td>Web Task Manager</td>
+                                            <td><span class="badge rounded-pill bg-primary">College</span></td>
+                                            <td>09-09-2026</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
+                                            <td>Web Homework 6</td>
+                                            <td><span class="badge rounded-pill bg-primary">College</span></td>
+                                            <td>09-09-2026</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
+                                            <td>IyE Homework 9</td>
+                                            <td><span class="badge rounded-pill bg-primary">College</span></td>
+                                            <td>13-09-2026</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Card Div 4 -->
+                <div class="col-12 col-md-6">
+                    <div class="card overflow-y-auto" style="height: 45vh;">
+                        <div class="card-body">
+
+                            <!-- Card Title -->
+                            <div class="border-bottom border-dark mb-2 border-2" style="border-color: #555 !important;">
+                                <p class="card-title fw-bold fs-3 mb-1">Completed Tasks</p>
+                            </div>
+                            
+                            <!-- Completed Tasks -->
+                            <div class="d-flex align-items-center mb-2">
+                                <table class="table table-hover table-success">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col"><i class="fa-solid fa-check"></i></th>
+                                            <th scope="col">Task</th>
+                                            <th scope="col">Label</th>
+                                            <th scope="col">Date</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked></td>
+                                            <td class="text-decoration-line-through">Purchase Water</td>
+                                            <td><span class="badge rounded-pill bg-success">Home</span></td>
+                                            <td>06-09-2026</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked></td>
+                                            <td class="text-decoration-line-through">IyE Homework 6</td>
+                                            <td><span class="badge rounded-pill bg-primary">College</span></td>
+                                            <td>06-09-2026</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked></td>
+                                            <td class="text-decoration-line-through">IyE Homework 7</td>
+                                            <td><span class="badge rounded-pill bg-primary">College</span></td>
+                                            <td>06-09-2026</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked></td>
+                                            <td class="text-decoration-line-through">Gathering with Friends</td>
+                                            <td><span class="badge rounded-pill bg-warning text-dark">Social Life</span></td>
+                                            <td>05-09-2026</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked></td>
+                                            <td class="text-decoration-line-through">Resolve Tickets</td>
+                                            <td><span class="badge rounded-pill bg-danger">Work</span></td>
+                                            <td>04-09-2026</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked></td>
+                                            <td class="text-decoration-line-through">Informative Session</td>
+                                            <td><span class="badge rounded-pill bg-danger">Work</span></td>
+                                            <td>03-09-2026</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked></td>
+                                            <td class="text-decoration-line-through">OOP Homework 2</td>
+                                            <td><span class="badge rounded-pill bg-primary">College</span></td>
+                                            <td>02-09-2026</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            
+            <br>
+
+        </main>
+        <footer>
+            <!-- place footer here -->
+        </footer>
+        <!-- Bootstrap JavaScript Bundle (includes Popper) -->
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+            crossorigin="anonymous"
+        ></script>
+    </body>
+
+    <!-- Alerts -->
+    <script>
+        document.querySelectorAll('.label-alert').forEach(function(label) {
+            label.addEventListener('click', function() {
+                alert('You clicked: ' + this.textContent.trim() + ' label');
+            });
+        });
+    </script>
+
+    <!-- P02 -->
+
+    <!-- Models -->
+    <script src="../models/user.js"></script>
+    <script src="../models/task.js"></script>
+    <script src="../models/tag.js"></script>
+    <!-- Controllers -->
+    <script src="../controllers/users_controller.js"></script>
+    <script src="../controllers/tasks_controller.js"></script>
+    <script src="../controllers/tags_controller.js"></script>
+
+    <!-- Tests -->
+    <script src="../test.js"></script>
+
+</html>

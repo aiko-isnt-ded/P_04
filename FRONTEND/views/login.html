@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <title>Task Manager</title>
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <!-- Bootstrap CSS v5.3.8 -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+            crossorigin="anonymous"
+        />
+
+        <style>
+            body {
+                background: linear-gradient(45deg,rgba(238, 174, 202, 1) 0%, rgba(163, 190, 212, 1) 100%);
+            }
+        </style>
+        <script>
+            function toggleForms(){
+                let form_login = document.getElementById('formLogin'),
+                    form_register = document.getElementById('formRegister');
+                
+                if(form_register.style.display == 'none'){
+                    form_login.style.display = 'none';
+                    form_register.style.display = 'block';
+                }
+                else{
+                    form_login.style.display = 'block';
+                    form_register.style.display = 'none';
+                }
+        }
+        </script>
+    </head>
+
+    <body class="d-flex align-items-center justify-content-center vh-100">
+        <header>
+            <!-- place navbar here -->
+        </header>
+        <main class="w-100 d-flex justify-content-center">
+            
+            <!-- CARD -->
+            <div class="card" style="width: 50%; max-width: 500px;">
+                <div class="card-body">
+                    <div class="card-header text-center">
+                        <h4>Task Manager</h4>
+                    </div>
+                    <br> 
+
+                    <!-- LOG-IN FORM -->
+                    <form action="./home.html" id="formLogin">
+                    
+                        <p class="card-text text-center">Welcome to your personal task manager! <br>Log in or create an account:</p>
+
+                        <!-- Email -->
+                        <div class="mb-3 mt-3">
+                            <label for="email" class="form-label">Email:</label>
+                            <input type="email" class="form-control" id="email" placeholder="Enter email" name="email" required="true">
+                        </div>
+                        
+                        <!-- Password -->
+                        <div class="mb-3">
+                            <label for="pwd" class="form-label">Password:</label>
+                            <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pswd" required="true">
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="text-center d-grid gap-2 col-7 mx-auto">
+                            <button class="btn btn-primary btn-lg">Log In</button>
+                            <button type="button" class="btn btn-secondary btn-lg" onclick="toggleForms()">Register</button>
+                        </div>
+                        </form>
+                    
+                    <!-- REGISTER FORM -->
+                    <form id="formRegister" action="javascript:alert('Registro exitoso!')" action="./home.html" style="display: none;">
+                        <div class="mb-3 mt-3">
+                            <label for="email" class="form-label">Name:</label>
+                            <input type="text" class="form-control" placeholder="Enter name" required="true">
+                        </div>
+                        
+                        <!-- Email -->
+                        <div class="mb-3 mt-3">
+                            <label for="email" class="form-label">Email:</label>
+                            <input type="email" class="form-control" id="email" placeholder="Enter email" name="email" required="true">
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-3">
+                            <label for="pwd" class="form-label">Password:</label>
+                            <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pswd" required="true">
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div class="mb-3">
+                            <label for="pwd" class="form-label">Confirm Password:</label>
+                            <input type="password" class="form-control" id="pwd" placeholder="Re-enter password" name="pswd" required="true">
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="text-center d-grid gap-2 col-7 mx-auto">
+                            <button class="btn btn-primary btn-lg">Create Account</button>
+                            <button type="button" class="btn btn-secondary btn-lg" onclick="toggleForms()">Log In</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </main>
+        <footer>
+            <!-- place footer here -->
+        </footer>
+        <!-- Bootstrap JavaScript Bundle (includes Popper) -->
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+            crossorigin="anonymous"
+        ></script>
+    </body>
+</html>

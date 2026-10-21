@@ -1,0 +1,14 @@
+[
+  {
+    "id": 2,
+    "name": "masters",
+    "color": "#FF0000",
+    "id_user": 3
+  },
+  {
+    "id": 3,
+    "name": "school",
+    "color": "#008000",
+    "id_user": 3
+  }
+]
