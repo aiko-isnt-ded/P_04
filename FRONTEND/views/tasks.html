@@ -47,7 +47,6 @@
 
         <!-- Icons -->
         <script src="https://kit.fontawesome.com/98b9f9da5b.js" crossorigin="anonymous"></script>
-
     </head>
 
     <body>
@@ -115,9 +114,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <a href="./login.html">
-                            <button type="button" class="btn btn-primary">Accept</button>
-                        </a>
+                        <button id="bttn_logout" type="button" class="btn btn-primary">Accept</button>
                     </div>
                     </div>
                 </div>
@@ -513,5 +510,13 @@
                 });
             });
         </script>
+        
+        <!-- ENVIRONMENT -->
+         <script type="module" src="../controllers/env.js"></script>
+         <!-- IMPORTS -->
+        <script type="module" src="../controllers/auth_controller.js"></script>
+        <script src="../controllers/tasks_controller.js"></script>
+        <script src="../controllers/tags_controller.js"></script>    
+
     </body>
 </html>

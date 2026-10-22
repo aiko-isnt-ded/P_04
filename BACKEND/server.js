@@ -18,6 +18,11 @@ app.use('/controllers', express.static('../FRONTEND/controllers'));
 app.use('/views', express.static('../FRONTEND/views'));
 app.use('/assets', express.static('../FRONTEND/assets'));
 
+// Root directory
+app.get('/', (req, res) => {
+    res.redirect('/views/login.html');
+});
+
 // API routes
 app.use(router);
 

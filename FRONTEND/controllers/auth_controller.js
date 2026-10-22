@@ -36,4 +36,22 @@ function login() {
     })
 }
 
-document.getElementById('formLogin').addEventListener('submit', login);
+function logout() {
+    sessionStorage.clear();
+    window.location.href = LOCAL_URL + 'views/login.html';
+}
+
+
+// Search for loginForm
+const loginForm = document.getElementById('formLogin');
+
+if (loginForm) {
+    loginForm.addEventListener('submit', login);
+}
+
+// Search for LogOut button
+const logoutButton = document.getElementById('bttn_logout');
+
+if (logoutButton) {
+    logoutButton.addEventListener('click', logout);
+}
