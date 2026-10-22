@@ -10,6 +10,18 @@ const User = require('../models/user');
 let users = JSON.parse(fs.readFileSync('./database/users.json'));
 
 // =======================
+// Login
+// =======================
+
+exports.login = (req, res) => {
+    let data = req.body,
+        user = users.find(user => (user.email == data.email && user.password == data.password));
+
+    if (user) res.send(user);
+    else res.sendStatus(401);
+}
+
+// =======================
 // API Functions
 // =======================
 

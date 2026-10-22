@@ -48,16 +48,16 @@
                         
                         <!-- Password -->
                         <div class="mb-3">
-                            <label for="pwd" class="form-label">Password:</label>
-                            <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pswd" required="true">
+                            <label for="password" class="form-label">Password:</label>
+                            <input type="password" class="form-control" id="password" placeholder="Enter password" name="password" required="true">
                         </div>
 
                         <!-- Buttons -->
                         <div class="text-center d-grid gap-2 col-7 mx-auto">
-                            <button class="btn btn-primary btn-lg">Log In</button>
+                            <button type="submit" class="btn btn-primary btn-lg">Log In</button>
                             <button type="button" class="btn btn-secondary btn-lg" onclick="toggleForms()">Register</button>
                         </div>
-                        </form>
+                    </form>
                     
                     <!-- REGISTER FORM -->
                     <form id="formRegister" action="javascript:alert('Registro exitoso!')" action="./home.html" style="display: none;">
@@ -74,14 +74,14 @@
 
                         <!-- Password -->
                         <div class="mb-3">
-                            <label for="pwd" class="form-label">Password:</label>
-                            <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pswd" required="true">
+                            <label for="password" class="form-label">Password:</label>
+                            <input type="password" class="form-control" id="password" placeholder="Enter password" name="pswd" required="true">
                         </div>
 
                         <!-- Confirm Password -->
                         <div class="mb-3">
-                            <label for="pwd" class="form-label">Confirm Password:</label>
-                            <input type="password" class="form-control" id="pwd" placeholder="Re-enter password" name="pswd" required="true">
+                            <label for="password" class="form-label">Confirm Password:</label>
+                            <input type="password" class="form-control" id="password" placeholder="Re-enter password" name="pswd" required="true">
                         </div>
 
                         <!-- Buttons -->
@@ -107,7 +107,7 @@
         <!------------------------------------>
         <!-- Scripts -->
         <!------------------------------------>
-        <script src="../controllers/auth_controller.js"></script>
+        <script type="module" src="../controllers/auth_controller.js"></script>
 
     </body>
 </html>
