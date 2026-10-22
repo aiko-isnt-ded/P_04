@@ -1,16 +1,9 @@
 [
   {
-    "id": 2,
-    "name": "Yoo Joonghyuk",
-    "email": "yoo_joonghyuk@kimcom.com",
-    "password": "supreme-king",
+    "id": 1,
+    "name": "Kim Dokja",
+    "email": "kim_dokja@kimcom.com",
+    "password": "yjhs-apologist",
     "joined_at": "2026-10-20T04:17:19.220Z"
-  },
-  {
-    "id": 3,
-    "name": "Vivienne Toledo De la Fuente",
-    "email": "han_sooyoung@kimcom.com",
-    "password": "best_writer123",
-    "joined_at": "2026-10-20T04:17:21.535Z"
   }
 ]

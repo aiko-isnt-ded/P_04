@@ -5,20 +5,6 @@ const path = require('path');
 // Build router
 const routerApi = express.Router();
 
-// =======================
-// Auth Middleware
-// =======================
-
-const authMiddleware = (req, res, next) => {
-    // Checks whether the header exists
-    if(req.headers['x-auth']) {
-        next();
-    }
-    else {
-        res.sendStatus(401);
-    }
-};
-
 // ======================= 
 // Routes Middlewares
 // =======================

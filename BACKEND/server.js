@@ -14,3 +14,9 @@ app.use(router);
 app.listen(port, () => {
     console.log(`Practice 3 running at port: ${port}`);
 });
+
+// Add loading of static elements
+app.use(express.static('FRONTEND'));
+app.use('/controllers', express.static('../FRONTEND/controllers'));
+app.use('/views', express.static('../FRONTEND/views'));
+app.use('/assets', express.static('../FRONTEND/assets'));
