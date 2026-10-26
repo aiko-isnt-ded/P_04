@@ -1,5 +1,3 @@
-// Import constant
-import {LOCAL_URL} from './env.js';
 
 function toggleForms(){
     let form_login = document.getElementById('formLogin'),
