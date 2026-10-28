@@ -83,7 +83,7 @@ exports.usersPage = (req, res) => {
                 page: page,
                 next_page: page + 1,
                 limit: limit, 
-                tptañ: users.length,
+                total: users.length,
                 data: res_users
             })
         }
