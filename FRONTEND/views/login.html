@@ -65,7 +65,7 @@
                     <form id="formRegister" action="javascript:alert('Registro exitoso!')" action="./home.html" style="display: none;">
                         <div class="mb-3 mt-3">
                             <label for="email" class="form-label">Name:</label>
-                            <input type="text" class="form-control" placeholder="Enter name" required="true">
+                            <input type="text" class="form-control" id="registerName" placeholder="Enter name" name="name" required="true">
                         </div>
                         
                         <!-- Email -->
@@ -77,13 +77,13 @@
                         <!-- Password -->
                         <div class="mb-3">
                             <label for="password" class="form-label">Password:</label>
-                            <input type="password" class="form-control" id="password" placeholder="Enter password" name="pswd" required="true">
+                            <input type="password" class="form-control" id="password" placeholder="Enter password" name="password" required="true">
                         </div>
 
                         <!-- Confirm Password -->
                         <div class="mb-3">
                             <label for="confirm_password" class="form-label">Confirm Password:</label>
-                            <input type="confirm_password" class="form-control" id="confirm_password" placeholder="Re-enter password" name="pswd" required="true">
+                            <input type="password" class="form-control" id="confirm_password" placeholder="Re-enter password" name="confirm_password" required="true">
                         </div>
 
                         <!-- Buttons -->

@@ -46,22 +46,29 @@ function register() {
     event.preventDefault();
     let data = new FormData(event.target);
 
-    fetch('/login', {
+    fetch('/registerUser', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(Object.fromEntries(data.entries()))
     }).then(response => {
-      if (!response.ok) alert('Incorrect email or password');
+      if (!response.ok) {
+        throw new Error('Registration failed: ' + response.status);
+      }
       return response.json(); 
     }).then( user=> {
         sessionStorage.setItem('user', JSON.stringify(user));
         window.location.href = LOCAL_URL + 'views/home.html';
     }).catch (err => {
-        console.error('Login error: ', err);
+        console.error('Registration error: ', err);
+        alert(err.message);
     })
 }
+
+// =======================
+// Execute Functions
+// =======================
 
 // Search for forms and buttons
 const loginForm = document.getElementById('formLogin');

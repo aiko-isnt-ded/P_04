@@ -12,10 +12,11 @@ const routerApi = express.Router();
 const usersController = require('../controllers/users_api_controller.js')
 
 // =======================
-// Login
+// User Routes
 // =======================
 
 routerApi.post('/login', usersController.login);
+routerApi.post('/registerUser', usersController.registerUser);
 
 // ======================= 
 // Routes Middlewares
