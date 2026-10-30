@@ -52,9 +52,10 @@ function register() {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(Object.fromEntries(data.entries()))
-    }).then(response => {
+    }).then(async response => {
       if (!response.ok) {
-        throw new Error('Registration failed: ' + response.status);
+        let msg = await response.text()
+        throw new Error(msg || 'Registration failed: ' + response.status);
       }
       return response.json(); 
     }).then( user=> {

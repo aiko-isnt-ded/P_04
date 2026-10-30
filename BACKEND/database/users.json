@@ -5,5 +5,12 @@
     "email": "kim_dokja@kimcom.com",
     "password": "yjhs-apologist",
     "joined_at": "2026-10-20T04:17:19.220Z"
+  },
+  {
+    "id": 2,
+    "name": "Yoo Joonghyuk",
+    "email": "yjh@kimcom.com",
+    "password": "supreme-king",
+    "joined_at": "2026-10-29T23:02:37.646Z"
   }
 ]

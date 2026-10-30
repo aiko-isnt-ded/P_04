@@ -75,7 +75,7 @@ class User {
             throw new UserException("Password CANNOT be empty.")
         }
         if(password.length < 8) {
-            throw new UserException("Password MUST have a minimum of 8 characters.")
+            throw new UserException("Password must have a minimum of 8 characters.")
         }
         // Check if password is unique
         if (users_data.some(user => user.password == password && user.id != this.#id)) {
