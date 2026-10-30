@@ -7,6 +7,11 @@ const router = require('./routes/api.js');
 const app = express();
 const port = 3000;
 
+// Root directory
+app.get('/', (req, res) => {
+    res.redirect('/views/login.html');
+});
+
 // Middleware
 app.use(express.json());
 
@@ -17,11 +22,6 @@ app.use(express.static('FRONTEND'));
 app.use('/controllers', express.static('../FRONTEND/controllers'));
 app.use('/views', express.static('../FRONTEND/views'));
 app.use('/assets', express.static('../FRONTEND/assets'));
-
-// Root directory
-app.get('/', (req, res) => {
-    res.redirect('/views/login.html');
-});
 
 // API routes
 app.use(router);

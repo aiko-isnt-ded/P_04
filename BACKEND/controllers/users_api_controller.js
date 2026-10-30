@@ -182,12 +182,13 @@ exports.deleteUser = (req, res) => {
         const users = readUsers();
 
         let index = users.findIndex(i => String(i.id) === req.params.id);
-        let deleted_user = {...users[index]};
+        if (index === -1) return res.status(404).send('User Not Found');
+
+        let deleted_user = users[index];
         let users_updated = users.filter(i => String(i.id) !== req.params.id);
 
         // Update users
-        fs.writeFileSync('./database/users.json', JSON.stringify(users_updated, null, 2));
-        users = users_updated;
+        writeUsers(users_updated)
 
         // Response
         res.json ({

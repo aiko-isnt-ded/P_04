@@ -138,6 +138,34 @@ function init() {
 }
 
 // Delete User
+function deleteUser() {
+    event.preventDefault();
+
+    // Get current user
+    let user = JSON.parse(sessionStorage.getItem('user'));
+    if (!user) return;
+
+    // Call DELETE 
+    fetch('/users/' + user.id, {
+        method: 'DELETE',
+        headers: {
+            'x-auth': user.password
+        }
+    }).then(async response => {
+        // Error happend
+        if (!response.ok) {
+            let msg = await response.text();
+            throw new Error(msg || 'Delete failed: ' + response.status);
+        }
+        return response.json();
+    }).then(result => {
+        // ALl went well
+        sessionStorage.clear();
+        window.location.href = LOCAL_URL;
+    }).catch(err => {
+        alert(err.message);
+    })
+}
 
 // =======================
 // Execute Functions
@@ -150,6 +178,7 @@ const logoutButton = document.getElementById('bttn_logout');
 // Related to user CRUD
 const editUserModal = document.getElementById('editUserModal');
 const updateButton = document.getElementById('bttn_update');
+const deleteButton = document.getElementById('bttn_delete');
 
 // Route functions based on actions
 if (loginForm) {
@@ -170,6 +199,10 @@ if (editUserModal) {
 
 if (updateButton) {
     updateButton.addEventListener('click', updateUser);
+}
+
+if (deleteButton) {
+    deleteButton.addEventListener('click', deleteUser);
 }
 
 init();
