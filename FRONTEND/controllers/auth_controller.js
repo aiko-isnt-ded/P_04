@@ -42,6 +42,11 @@ function logout() {
     window.location.href = LOCAL_URL + 'views/login.html';
 }
 
+// =======================
+// User Functions
+// =======================
+
+// Create new user
 function register() {
     event.preventDefault();
     let data = new FormData(event.target);
@@ -67,6 +72,73 @@ function register() {
     })
 }
 
+// Populate Edit User Modal
+function populateModal() {
+    event.preventDefault();
+
+    // Get the logged-in user
+    let user = JSON.parse(sessionStorage.getItem('user'));
+
+    // Fill modal
+    document.getElementById('edit_name').value = user.name;
+    document.getElementById('edit_email').value = user.email;
+    document.getElementById('edit_password').value = user.password;
+}
+
+// Update User
+function updateUser() {
+    event.preventDefault();
+
+    // Get current user
+    let user = JSON.parse(sessionStorage.getItem('user'));
+    if (!user) return;
+
+    // CONFIRM: Make sure all data is entered for some reason?
+    let inputs = document.querySelectorAll('#editUserModal input');
+    for (let i of inputs) {
+        if (!i.reportValidity()) return;
+    }
+
+    let data = {
+        name: document.getElementById('edit_name').value,
+        email: document.getElementById('edit_email').value,
+        password: document.getElementById('edit_password').value
+    };
+
+    fetch('/users/' + user.id, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'x-auth': user.password 
+        },
+        body: JSON.stringify(data)
+    }).then(async response => {
+        if (!response.ok) {
+            let msg = await response.text();
+            throw new Error(msg || 'Update failed: ' + response.status);
+        }
+        return response.json();
+    }).then(result => {
+        // Update session storage w the new user
+        sessionStorage.setItem('user', JSON.stringify(result.user));
+
+        // Close modal
+        let modal = bootstrap.Modal.getInstance(document.getElementById('editUserModal'));
+        if (modal) modal.hide();
+
+        alert(result.message);
+    }).catch(err => {
+        alert(err.message);
+    })
+}
+
+// No idea what this does
+function init() {
+
+}
+
+// Delete User
+
 // =======================
 // Execute Functions
 // =======================
@@ -75,6 +147,9 @@ function register() {
 const loginForm = document.getElementById('formLogin');
 const registerForm = document.getElementById('formRegister');
 const logoutButton = document.getElementById('bttn_logout');
+// Related to user CRUD
+const editUserModal = document.getElementById('editUserModal');
+const updateButton = document.getElementById('bttn_update');
 
 // Route functions based on actions
 if (loginForm) {
@@ -88,3 +163,13 @@ if (registerForm) {
 if (logoutButton) {
     logoutButton.addEventListener('click', logout);
 }
+
+if (editUserModal) {
+    editUserModal.addEventListener('shown.bs.modal', populateModal);
+}
+
+if (updateButton) {
+    updateButton.addEventListener('click', updateUser);
+}
+
+init();

@@ -170,6 +170,7 @@ exports.patchUser = (req, res) => {
             user: new_user
         });
     } catch (err) {
+        console.error('Update error: ', err);
         res.status(400).send(err.message);
     }
 }

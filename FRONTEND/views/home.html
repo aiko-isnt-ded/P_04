@@ -94,6 +94,11 @@
                             <button class="btn btn-primary" type="submit">Search</button>
                         </form>
 
+                        <!-- Config Icon -->
+                        <a href="#" title="Edit User" data-bs-toggle="modal" data-bs-target="#editUserModal">
+                            <i class="fas fa-cog" style='font-size:24px'></i>
+                        </a>
+
                         <!-- Log Out Icon -->
                         <a href="#" title="Log Out" data-bs-toggle="modal" data-bs-target="#logoutModal">
                             <i class="fas fa-sign-out-alt" style='font-size:24px'></i>
@@ -115,6 +120,32 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button id="bttn_logout" type="button" class="btn btn-primary">Accept</button>
+                    </div>
+                    </div>
+                </div>
+                </div>
+
+                <!-- Edit User Modal -->
+                <div class="modal" id="editUserModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit User</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Name</p>
+                        <input type="text" class="form-control" id="edit_name" name="name" placeholder="Enter new user name">
+                        <br>
+                        <p>Email</p>
+                        <input type="email" class="form-control" id="edit_email" name="email" placeholder="Enter new user email">
+                        <br>
+                        <p>Password</p>
+                        <input type="password" class="form-control" id="edit_password" name="password" placeholder="Enter new password">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" id="bttn_delete" data-bs-dismiss="modal">Delete</button>
+                        <button type="button" class="btn btn-primary" id="bttn_update" >Save Changes</button>
                     </div>
                     </div>
                 </div>
