@@ -129,6 +129,42 @@ function updateTag() {
     });
 }
 
+function deleteTag() {
+    event.preventDefault();
+
+    // Get logged user
+    let user = JSON.parse(sessionStorage.getItem('user'));
+    if (!user || !tagToEdit) return;
+
+    // Call the delete method
+    fetch(TAGS_URL + '/' + tagToEdit.id, {
+        method:'DELETE',
+        headers: {
+            'x-auth': user.password
+        }
+    }).then(async response => {
+        if (!response.ok) {
+            let msg = await response.text();
+            throw new Error(msg || 'Tag deletion failed: ' + response.status);
+        }
+        return response.json();
+    }).then(data => {
+        // Close modal
+        let modal = document.getElementById('editLabel');
+        let b_modal = bootstrap.Modal.getInstance(modal);
+        if (b_modal) b_modal.hide();
+
+        // Clear the selected tag
+        tagToEdit = null;
+
+        // Send alert and refresh data
+        alert(data.message);
+        init();
+    }).catch(err => {
+        alert(err.message);
+    });
+}
+
 function init() {
     // Check if there's a dropdown label
     let tagsList = document.getElementById('dropdownLabels');
@@ -198,6 +234,7 @@ function init() {
 // Search for forms and buttons
 const bttnCreateLabel = document.getElementById('bttn_create_label');
 const bttnUpdateLabel = document.getElementById('bttn_update_label');
+const bttnDeleteLabel = document.getElementById('bttn_delete_label');
 
 // Route functions based on actions
 if (bttnCreateLabel) {
@@ -206,6 +243,10 @@ if (bttnCreateLabel) {
 
 if (bttnUpdateLabel) {
     bttnUpdateLabel.addEventListener('click', updateTag);
+}
+
+if (bttnDeleteLabel) {
+    bttnDeleteLabel.addEventListener('click', deleteTag);
 }
 
 init();
