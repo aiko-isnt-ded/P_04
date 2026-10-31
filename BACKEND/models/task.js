@@ -3,14 +3,36 @@
 // =======================
 
 const fs = require('fs');
+const path = require('path');
 
-// Read database files
-let tasks_data = JSON.parse(fs.readFileSync('./database/tasks.json'))
-let users_data = JSON.parse(fs.readFileSync('./database/users.json'))
-let tags_data = JSON.parse(fs.readFileSync('./database/tags.json'))
+// Database paths
 
+const TASKS_PATH = path.join(__dirname, '../database/tasks.json');
+const USERS_PATH = path.join(__dirname, '../database/users.json');
+const TAGS_PATH = path.join(__dirname, '../database/tags.json');
+
+// Read functions
+
+function readTasks() {
+    return JSON.parse(fs.readFileSync(TASKS_PATH, 'utf8'));
+}
+
+function readUsers() {
+    return JSON.parse(fs.readFileSync(USERS_PATH, 'utf8'));
+}
+
+function readTags() {
+    return JSON.parse(fs.readFileSync(TAGS_PATH, 'utf8'));
+}
+
+// New ID function so that no duplicate IDs are created
 function getNextTaskID() {
-    return tasks_data.length + 1;
+    let tasks = readTasks();
+    let max = 0;
+    for (const t of tasks) {
+        if (Number(t.id) > max) max = Number(t.id);
+    }
+    return max + 1;
 }
 
 // =======================
@@ -81,7 +103,7 @@ class Task {
         }
 
         // Check if user exists
-        if (users_data.filter(i => i['id'] === id_user).length === 0) {
+        if (!readUsers().some(i => String(i.id) === String(id_user))) {
             throw new TaskException(`User with ID ${id_user} does NOT exist.`);
         }
 
@@ -111,7 +133,7 @@ class Task {
         // Check that tag exists
         for (let i = 0; i < tags.length; i++) {
             // Match a tag with the id
-            let tagExists = tags_data.some(tag => tag.id == tags[i]);
+            let tagExists = readTags().some(tag => tag.id == tags[i]);
 
             // Case: Tag doesn't exist
             if (!tagExists) {

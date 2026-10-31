@@ -4,11 +4,30 @@
 
 // Import Library
 const fs = require('fs');
+const path = require('path');
 // Import Task Model
 const Task = require('../models/task');
-// Load JSON DBs
-let tasks = JSON.parse(fs.readFileSync('./database/tasks.json'));
-let users = JSON.parse(fs.readFileSync('./database/users.json'));
+
+// =======================
+// DBs
+// =======================
+
+const TASKS_PATH = path.join(__dirname, '../database/tasks.json');
+const USERS_PATH = path.join(__dirname, '../database/users.json');
+
+// Read functions
+function readTasks() {
+    return JSON.parse(fs.readFileSync(TASKS_PATH, 'utf8'));
+}
+
+function readUsers() {
+    return JSON.parse(fs.readFileSync(USERS_PATH, 'utf8'));
+}
+
+// Write functions
+function writeTasks(tasks) {
+    fs.writeFileSync(TASKS_PATH, JSON.stringify(tasks, null, 2));
+}
 
 // =======================
 // API Functions
@@ -16,6 +35,9 @@ let users = JSON.parse(fs.readFileSync('./database/users.json'));
 
 exports.authTasksMiddleware = (req, res, next) => {
     try {
+        // Read users
+        let users = readUsers();
+
         // Check whether a password was entered
         let pwd = req.get('x-auth');
         if (!pwd) return res.status(401).send('Password is missing');
@@ -35,12 +57,15 @@ exports.authTasksMiddleware = (req, res, next) => {
         req.user = user;
         next()
     } catch(err) {
-        return res.status(400).send(err.message);
+        return res.status(400).send(err.errorMessage || err.message);
     }
 }
 
 exports.authTasksMiddleware2 = (req, res, next) => {
     try {
+        // Read users
+        let users = readUsers();
+
         // Check whether a password was entered
         let pwd = req.get('x-auth');
         if (!pwd) return res.status(401).send("Password is missing");
@@ -52,13 +77,16 @@ exports.authTasksMiddleware2 = (req, res, next) => {
         req.user = found_user;
         next();
     } catch (err) {
-        return res.status(400).send(err.message);
+        return res.status(400).send(err.errorMessage || err.message);
     }
 }
 
 // POST Method to Create Task
 exports.registerTask = (req, res) => {
     try {
+        // Read data
+        let tasks = readTasks();
+
         // Get fields from JSON request
         let title = req.body.title;
         let description = req.body.description;
@@ -78,20 +106,29 @@ exports.registerTask = (req, res) => {
 
         // Create new task
         let new_task = new Task(title, new_description, new_due_date, req.user.id, new_status, new_tags);
-        tasks.push(new_task.toObj());
+        let task_obj = new_task.toObj();
 
-        fs.writeFileSync('./database/tasks.json', JSON.stringify(tasks, null, 2));
-        res.send('New Task Added');
+        // Save to file
+        tasks.push(task_obj);
+        writeTasks(tasks);
+
+        return res.status(201).json({
+            message: 'Task created successfully!',
+            task: task_obj
+        });
     } catch (err) {
-        res.status(400).send(err.message);
+        res.status(400).send(err.errorMessage || err.message);
     }
 }
 
 // GET Method to Search ALL tasks of a user
 exports.userTasks = (req, res) => {
     try {
-        let page = parseInt(req.query.page);
-        let limit = parseInt(req.query.limit);
+        // Read
+        tasks = readTasks();
+
+        let page = parseInt(req.query.page) || 1;
+        let limit = parseInt(req.query.limit) || 10;
 
         // Get user tasks
         let user_tasks = tasks.filter(i => String(i.id_user) === String(req.user.id));
@@ -104,17 +141,20 @@ exports.userTasks = (req, res) => {
             page: page,
             next_page: page + 1,
             limit: limit,
-            total: tasks.length,
+            total: user_tasks.length,
             data: user_tasks.slice(start, end)
         });
     } catch(err) {
-        return res.status(400).send(err.message);
+        return res.status(400).send(err.errorMessage || err.message);
     }
 }
 
 // GET Method to Search a Task based on ID
 exports.searchTaskbyID = (req, res) => {
     try {
+        // Read
+        tasks = readTasks();
+
         // Search for a task based on ID
         let found_task = tasks.find(i => String(i.id_user) === String(req.user.id) && String(i.id) === req.params.id);
         
@@ -124,13 +164,16 @@ exports.searchTaskbyID = (req, res) => {
         // Return response
         res.json(found_task);
     } catch(err) {
-        return res.status(400).send(err.message);
+        return res.status(400).send(err.errorMessage || err.message);
     }
 }
 
 // PATCH Method to Update a Task by ID
 exports.patchTask = (req, res) => {
     try {
+        // Read
+        tasks = readTasks();
+
         // Get body of the request
         let body = req.body;
 
@@ -174,13 +217,16 @@ exports.patchTask = (req, res) => {
             task: updated_task
         });
     } catch(err) {
-        return res.status(400).send(err.message);
+        return res.status(400).send(err.errorMessage || err.message);
     }
 }
 
 // DELETE method
 exports.deleteTask = (req, res) => {
     try {
+        // Read
+        tasks = readTasks();
+        
         // Get task index
         let index = tasks.findIndex(i => String(i.id) === req.params.id && String(i.id_user) === String(req.user.id));
 
@@ -201,90 +247,6 @@ exports.deleteTask = (req, res) => {
             task: deleted_task
         });
     } catch(err) {
-        return res.status(400).send(err.message);
+        return res.status(400).send(err.errorMessage || err.message);
     }
-}
-
-// =======================
-// Functions
-// =======================
-
-function createTask(title, due_date, description, owner, status, tags = []) {
-    let obj = new Task(title, due_date, description, owner, status, tags);
-    data.tasks.push(obj);
-}
-
-function getTaskById(id) {
-    let task = data.tasks.find(task => task.id == id);
-    return task || "404 - Task not found.";
-}
-
-function searchTasks(attribute, value) {
-    if (!Task.prototype.hasOwnProperty(attribute)) {
-        throw new TaskException(`Attribute ${attribute} does NOT exist.`)
-    }
-
-    return data.tasks.filter(task => {
-        // Handle dates
-        if (attribute == "due_date") {
-            return task.due_date.includes(value);
-        }
-
-        // Return filtered value
-        return String(task[attribute]).includes(String(value))
-    });
-}
-
-function getAllTasks() {
-    return data.tasks;
-}
-
-function updateTask(id, obj_new_info) {
-    let updated = false;
-    // Search Task
-    let task = data.tasks.find(task => task.id == id);
-
-    // Check if task exists
-    if (!task) {
-        throw new TaskException(`Task with ID ${id} does NOT exist.`);
-    }
-
-    // Iterate through attributes until we find the correct one
-    for (let attr in obj_new_info) {
-        // Check if attribute exists and is not id nor due_date
-        if (Task.prototype.hasOwnProperty(attr) && attr != "id") {
-            task[attr] = obj_new_info[attr];
-            updated = true;
-        }
-    }
-
-    // Exception if there was no update
-    if (!updated) {
-        throw new TaskException("Invalid attribute.");
-    }
-
-    return updated;
-}
-
-function oldDeleteTask(id) {
-    let index = data.tasks.findIndex(task => task.id == id);
-
-    if (index == -1) {
-        throw new TaskException(`Task with ID ${id} does NOT exist.`);
-    }
-    
-    // Delete record
-    data.tasks.splice(index, 1)
-
-    return `Tag with ID ${id} was deleted successfully.`;
-}
-
-function findTasksByTag(tags) {
-    if (!Array.isArray(tags)) {
-        throw new TaskException("Tags MUST be an array.");
-    }
-
-    return data.tasks.filter(task =>
-        tags.every(tagID => task.tags.includes(tagID))
-    );
 }
