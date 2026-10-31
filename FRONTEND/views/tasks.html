@@ -541,17 +541,14 @@
                 </div>
                 <div class="modal-body">
                     <p>Name</p>
-                    <input type="text" class="form-control" placeholder="Enter task name">
+                    <input type="text" class="form-control" id="newTaskName" placeholder="Enter task name" required maxlength="60">
                     <br>
                     <p>Date</p>
-                    <input type="date" class="form-control">
+                    <input type="date" class="form-control" id="newTaskDate" required>
                     <br>
                     <p>Label</p>
-                    <select class="form-select" aria-label="Label">
-                        <option selected>College</option>
-                        <option value="1">Work</option>
-                        <option value="2">Home</option>
-                        <option value="3">Social Life</option>
+                    <select class="form-select" id="newTaskLabel" aria-label="Label">
+                        <option value="" selected>No Label</option>
                     </select>
 
 
@@ -559,7 +556,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary">Create Task</button>
+                    <button type="button" class="btn btn-primary" id="bttn_create_task">Create Task</button>
                 </div>
                 </div>
             </div>
