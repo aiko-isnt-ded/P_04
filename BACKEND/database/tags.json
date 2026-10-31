@@ -1,13 +1,13 @@
 [
   {
     "id": 1,
-    "name": "test",
+    "name": "Home",
     "color": "#e8817d",
     "id_user": 1
   },
   {
     "id": 2,
-    "name": "test1",
+    "name": "Work",
     "color": "#563d7c",
     "id_user": 1
   },
