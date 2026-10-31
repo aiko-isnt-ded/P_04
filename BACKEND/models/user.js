@@ -3,10 +3,21 @@
 // =======================
 
 const fs = require('fs');
-let users_data = JSON.parse(fs.readFileSync('./database/users.json'))
+const path = require('path');
+
+const USERS_PATH = path.join(__dirname, '../database/users.json');
+
+// Function to read user data
+function readUsers() {
+    return JSON.parse(fs.readFileSync(USERS_PATH, 'utf8'));
+}
 
 function getNextUserID() {
-    return users_data.length + 1;
+    let max = 0;
+    for (const i of readUsers()) {
+        if (Number(i.id > max)) max = Number(i.id);
+    }
+    return max + 1;
 }
 
 // =======================
@@ -63,7 +74,7 @@ class User {
         }
 
         // Check if email is unique
-        if (users_data.some(user => user.email == email && user.id != this.#id)) {
+        if (readUsers().some(user => user.email == email && user.id != this.#id)) {
             throw new UserException("Email is already in use.")
         }
 
@@ -78,7 +89,7 @@ class User {
             throw new UserException("Password must have a minimum of 8 characters.")
         }
         // Check if password is unique
-        if (users_data.some(user => user.password == password && user.id != this.#id)) {
+        if (readUsers().some(user => user.password == password && user.id != this.#id)) {
             throw new UserException("Password has to be unique.")
         }
 

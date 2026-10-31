@@ -182,15 +182,15 @@
                     </div>
                     <div class="modal-body">
                         <p>Name</p>
-                        <input type="text" class="form-control" placeholder="Enter label name">
+                        <input type="text" class="form-control" id="labelName" placeholder="Enter label name">
                         <br>
                         <p>Colour</p>
-                        <input type="color" class="form-control form-control-color" id="exampleColorInput" value="#563d7c" title="Choose your color">
+                        <input type="color" class="form-control form-control-color" id="labelColor" value="#563d7c" title="Choose your color">
 
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary">Create Label</button>
+                        <button type="button" class="btn btn-primary" id="bttn_create_label">Create Label</button>
                     </div>
                     </div>
                 </div>
@@ -218,7 +218,7 @@
                                 <img src="https://github.com/aiko-isnt-ded/web-resources/blob/main/1P/balor-icon.png?raw=true" 
                                 class="rounded me-3" style="width: 140px; object-fit: cover;">
                                 <div>
-                                    <p class="card-text fw-bold mb-3">Balor Desmond</p>
+                                    <p class="card-text fw-bold mb-3" id="userNameWidget"></p>
                                     <p class="card-text mb-3"><b>Completed Tasks Today:</b> 3</p>
                                     <p class="card-text mb-3"><b>Pending Tasks Today:</b> 5</p>
                                 </div>

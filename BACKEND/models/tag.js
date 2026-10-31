@@ -3,14 +3,29 @@
 // =======================
 
 const fs = require('fs');
+const path = require('path');
 
-// Read database files
-let tags_data = JSON.parse(fs.readFileSync('./database/tags.json'))
-let users_data = JSON.parse(fs.readFileSync('./database/users.json'))
+// Database paths
+const TAGS_PATH = path.join(__dirname, '../database/tags.json');
+const USERS_PATH = path.join(__dirname, '../database/users.json');
 
+// Read functions
+function readTags() {
+    return JSON.parse(fs.readFileSync(TAGS_PATH, 'utf8'));
+}
 
+function readUsers() {
+    return JSON.parse(fs.readFileSync(USERS_PATH, 'utf8'));
+}
+
+// New ID function so that no duplicate IDs are created
 function getNextTagID() {
-    return tags_data.length + 1;
+    let tags = readTags();
+    let max = 0;
+    for (const t of tags) {
+        if (Number(t.id) > max) max = Number(t.id);
+    }
+    return max + 1;
 }
 
 // =======================
@@ -81,7 +96,8 @@ class Tag {
         }
 
         // Check if ID exists
-        if (users_data.filter(i => i["id"] === id_user).length === 0) {
+        let users = readUsers();
+        if (!users.some(i => String(i.id) === String(id_user))) {
             throw new TagException("User ID does NOT exist");
         }
 

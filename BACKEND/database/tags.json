@@ -1,1 +1,26 @@
-[]
+[
+  {
+    "id": 1,
+    "name": "test",
+    "color": "#e8817d",
+    "id_user": 1
+  },
+  {
+    "id": 2,
+    "name": "test1",
+    "color": "#563d7c",
+    "id_user": 1
+  },
+  {
+    "id": 3,
+    "name": "hi",
+    "color": "#563d7c",
+    "id_user": 2
+  },
+  {
+    "id": 4,
+    "name": "bye",
+    "color": "#33d17a",
+    "id_user": 2
+  }
+]

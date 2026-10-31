@@ -122,6 +122,9 @@ function updateUser() {
         // Update session storage w the new user
         sessionStorage.setItem('user', JSON.stringify(result.user));
 
+        // Refresh page data
+        init();
+
         // Close modal
         let modal = bootstrap.Modal.getInstance(document.getElementById('editUserModal'));
         if (modal) modal.hide();
@@ -134,7 +137,15 @@ function updateUser() {
 
 // No idea what this does
 function init() {
+    // Get logged-in user
+    let user = JSON.parse(sessionStorage.getItem('user'));
+    if (!user) return;
 
+    // Get widget
+    const userNameWidget = document.getElementById('userNameWidget');
+    if (userNameWidget) {
+        userNameWidget.innerText = user.name;
+    }
 }
 
 // Delete User
