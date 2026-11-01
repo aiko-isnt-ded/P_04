@@ -133,6 +133,21 @@ exports.userTasks = (req, res) => {
         // Get user tasks
         let user_tasks = tasks.filter(i => String(i.id_user) === String(req.user.id));
         
+        // Filter: Status
+        if (req.query.status) {
+            user_tasks = user_tasks.filter(i => i.status === req.query.status);
+        }
+
+        // Filter: Date
+        if (req.query.due_date) {
+            user_tasks = user_tasks.filter(i => String(i.due_date).slice(0, 10) === req.query.due_date);
+        }
+
+        // Filter: Tag
+        if (req.query.tag) {
+            user_tasks = user_tasks.filter(i => Array.isArray(i.tags) && i.tags.some(t => String(t) === req.query.tag));
+        }
+
         let start = (page - 1) * limit;
         let end = start + limit;
 

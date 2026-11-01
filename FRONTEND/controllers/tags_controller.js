@@ -165,7 +165,7 @@ function deleteTag() {
     });
 }
 
-function init() {
+function loadLabelsDropdown() {
     // Check if there's a dropdown label
     let tagsList = document.getElementById('dropdownLabels');
     let addLabel = document.getElementById('addLabel');
@@ -225,6 +225,12 @@ function init() {
     }).catch(err => {
         alert(err.message);
     });
+}
+
+function init() {
+    loadLabelsDropdown();
+    userSummary();
+    todayTasksWidget();
 }
 
 // =======================

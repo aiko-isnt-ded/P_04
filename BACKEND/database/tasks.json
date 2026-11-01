@@ -18,5 +18,45 @@
     "id_user": 1,
     "status": "A",
     "tags": []
+  },
+  {
+    "id": 3,
+    "title": "Return from the dead",
+    "description": "",
+    "due_date": "2026-11-01T00:00:00.000Z",
+    "id_user": 1,
+    "status": "F",
+    "tags": []
+  },
+  {
+    "id": 4,
+    "title": "Kiss Yoo Joonghyuk",
+    "description": "",
+    "due_date": "2026-11-01T00:00:00.000Z",
+    "id_user": 1,
+    "status": "F",
+    "tags": []
+  },
+  {
+    "id": 5,
+    "title": "Clean Room",
+    "description": "",
+    "due_date": "2026-11-01T00:00:00.000Z",
+    "id_user": 1,
+    "status": "F",
+    "tags": [
+      1
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Check KimCom's finances",
+    "description": "",
+    "due_date": "2026-11-01T00:00:00.000Z",
+    "id_user": 1,
+    "status": "A",
+    "tags": [
+      2
+    ]
   }
 ]

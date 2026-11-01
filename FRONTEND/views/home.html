@@ -240,8 +240,8 @@
                                 class="rounded me-3" style="width: 140px; object-fit: cover;">
                                 <div>
                                     <p class="card-text fw-bold mb-3" id="userNameWidget"></p>
-                                    <p class="card-text mb-3"><b>Completed Tasks Today:</b> 3</p>
-                                    <p class="card-text mb-3"><b>Pending Tasks Today:</b> 5</p>
+                                    <p class="card-text mb-3"><b>Completed Tasks Today:</b> <span id="completedTodayWidget">0</span> </p>
+                                    <p class="card-text mb-3"><b>Pending Tasks Today:</b> <span id="pendingTodayWidget">0</span> </p>
                                 </div>
                             </div>
 
@@ -249,8 +249,7 @@
                             <div>
                                 <p class="card-text fw-bold mb-1">Summary:</p>
 
-                                <p class="card-text mb-0">Balor is a user who has completed <b>3</b> tasks today. 
-                                They still have <b>5</b> pending tasks, so they have <b>37.5%</b> of their work done today.</p>
+                                <p class="card-text mb-0" id="summaryTextWidget"></p>
                             </div>
                         </div>
                     </div>
@@ -268,7 +267,7 @@
                             </div>
 
                             <!-- Today's Tasks -->
-                            <div class="d-flex align-items-center mb-2">
+                            <div class="d-flex align-items-center mb-2" id="todayTasks">
                                 <table class="table table-hover table-primary">
                                     <thead>
                                         <tr>
@@ -279,45 +278,19 @@
                                         </tr>
                                     </thead>
 
-                                    <tbody>
-                                        <tr>
-                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
-                                            <td>Wash Clothes</td>
-                                            <td><span class="badge rounded-pill bg-success">Home</span></td>
-                                            <td>06-09-2026</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
-                                            <td>Birthday Dinner</td>
-                                            <td><span class="badge rounded-pill bg-warning text-dark">Social Life</span></td>
-                                            <td>06-09-2026</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
-                                            <td>IyE Homework 8</td>
-                                            <td><span class="badge rounded-pill bg-primary">College</span></td>
-                                            <td>06-09-2026</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
-                                            <td>Groceries</td>
-                                            <td><span class="badge rounded-pill bg-success">Home</span></td>
-                                            <td>06-09-2026</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
-                                            <td>Call mom</td>
-                                            <td><span class="badge rounded-pill bg-warning text-dark">Social Life</span></td>
-                                            <td>06-09-2026</td>
-                                        </tr>
+                                    <tbody id="todayTasksTable">
+                                        <!-- Filled with data :) -->
                                     </tbody>
                                 </table>
                             </div>
+
+                            <!-- User has no tasks today -->
+                            <p class="text-center fw-bold mb-2 d-none" id="emptyTodayTasksTable">No tasks for now :)</p>
                             
+                            <!-- Pagination -->
+                            <nav class="d-none" id="todayTasksPagination">
+                                <ul class="pagination justify-content-center mb-0" id="todayTasksNavPages"></ul>
+                            </nav>
                         </div>
                     </div>
                 </div>
