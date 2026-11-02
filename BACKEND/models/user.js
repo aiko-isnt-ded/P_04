@@ -15,7 +15,7 @@ function readUsers() {
 function getNextUserID() {
     let max = 0;
     for (const i of readUsers()) {
-        if (Number(i.id > max)) max = Number(i.id);
+        if (Number(i.id) > max) max = Number(i.id);
     }
     return max + 1;
 }

@@ -121,8 +121,7 @@ function updateTag() {
         // Clear the tag to update
         tagToEdit = null;
 
-        // Send alert and refresh the data
-        alert(data.message);
+        // Refresh the data
         init();
     }).catch(err => {
         alert(err.message);

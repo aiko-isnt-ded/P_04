@@ -125,7 +125,7 @@ exports.registerTask = (req, res) => {
 exports.userTasks = (req, res) => {
     try {
         // Read
-        tasks = readTasks();
+        let tasks = readTasks();
 
         let page = parseInt(req.query.page) || 1;
         let limit = parseInt(req.query.limit) || 10;
@@ -168,7 +168,7 @@ exports.userTasks = (req, res) => {
 exports.searchTaskbyID = (req, res) => {
     try {
         // Read
-        tasks = readTasks();
+        let tasks = readTasks();
 
         // Search for a task based on ID
         let found_task = tasks.find(i => String(i.id_user) === String(req.user.id) && String(i.id) === req.params.id);
@@ -187,7 +187,7 @@ exports.searchTaskbyID = (req, res) => {
 exports.patchTask = (req, res) => {
     try {
         // Read
-        tasks = readTasks();
+        let tasks = readTasks();
 
         // Get body of the request
         let body = req.body;
@@ -224,8 +224,7 @@ exports.patchTask = (req, res) => {
         let updated_tasks = [...tasks];
         updated_tasks[index] = updated_task;
     
-        fs.writeFileSync('./database/tasks.json', JSON.stringify(updated_tasks, null, 2));
-        tasks = updated_tasks;
+        writeTasks(updated_tasks);
 
         res.json ({
             message: "Task updated successfully!",
@@ -240,7 +239,7 @@ exports.patchTask = (req, res) => {
 exports.deleteTask = (req, res) => {
     try {
         // Read
-        tasks = readTasks();
+        let tasks = readTasks();
         
         // Get task index
         let index = tasks.findIndex(i => String(i.id) === req.params.id && String(i.id_user) === String(req.user.id));
@@ -253,8 +252,7 @@ exports.deleteTask = (req, res) => {
         let new_tasks = tasks.filter(i => String(i.id) !== req.params.id);
 
         // Write new file
-        fs.writeFileSync('./database/tasks.json', JSON.stringify(new_tasks, null, 2));
-        tasks = new_tasks;
+        writeTasks(new_tasks);
 
         // Send response
         res.json({

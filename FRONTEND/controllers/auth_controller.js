@@ -99,11 +99,14 @@ function updateUser() {
         if (!i.reportValidity()) return;
     }
 
-    let data = {
-        name: document.getElementById('edit_name').value,
-        email: document.getElementById('edit_email').value,
-        password: document.getElementById('edit_password').value
-    };
+    let data = {};
+    let name = document.getElementById('edit_name').value.trim();
+    let email = document.getElementById('edit_email').value.trim();
+    let password = document.getElementById('edit_password').value;
+
+    if (name !== '') data.name = name;
+    if (email !== '') data.email = email;
+    if (password !== '') data.password = password;
 
     fetch('/users/' + user.id, {
         method: 'PATCH',

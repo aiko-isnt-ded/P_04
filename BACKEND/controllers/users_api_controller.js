@@ -13,6 +13,8 @@ const User = require('../models/user');
 // =======================
 
 const USERS_PATH = path.join(__dirname, '../database/users.json');
+const TASKS_PATH = path.join(__dirname, '../database/tasks.json');
+const TAGS_PATH = path.join(__dirname, '../database/tags.json');
 
 function readUsers() {
     return JSON.parse(fs.readFileSync(USERS_PATH, 'utf8'));
@@ -61,7 +63,7 @@ exports.authUsersMiddleware = (req, res, next) => {
         req.user = res_user;
         next()
     } catch(err) {
-        return res.status(400).send(err.message);
+        return res.status(400).send(err.errorMessage || err.message);
     }
 }
 
@@ -96,8 +98,8 @@ exports.usersPage = (req, res) => {
         if (req.get('x-auth') !== 'admin_auth') res.status(401).send("Wrong Admin Credentials");
         // If user has valid permits
         else {
-            let page = parseInt(req.query.page);
-            let limit = parseInt(req.query.limit);
+            let page = parseInt(req.query.page) || 1;
+            let limit = parseInt(req.query.limit) || 10;
 
             let start = (page - 1) * limit;
             let end = start + limit;
@@ -113,7 +115,7 @@ exports.usersPage = (req, res) => {
             })
         }
     } catch (err) {
-        res.status(400).send(err.message);
+        res.status(400).send(err.errorMessage || err.message);
     }
 }
 
@@ -122,7 +124,7 @@ exports.getUserFromID = (req, res) => {
     try {
         res.json(req.user);
     } catch (err) {
-        res.status(400).send(err.message);
+        res.status(400).send(err.errorMessage || err.message);
     }
 }
 
@@ -151,6 +153,24 @@ exports.patchUser = (req, res) => {
         if (Object.keys(changes).length === 0) {
             return res.status(400).send('No valid fields were given');
         }
+        // Error message: Empty username
+        if ('name' in changes && String(changes.name).trim() === '') {
+            return res.status(400).send('Name CANNOT be empty.');
+        }
+        // Error message: Empty email
+        if ('email' in changes && String(changes.email).trim() === '') {
+            return res.status(400).send('Email CANNOT be empty.');
+        }
+        // Error message: Password
+        if ('password' in changes) {
+            let pwd = String(changes.password);
+            if (pwd.trim() === '') return res.status(400).send('Password CANNOT be empty.');
+            if (pwd.length < 8) return res.status(400).send('Password must have a minimum of 8 characters.');
+            // Password must be unique
+            if (users.some(i => String(i.password) === pwd && String(i.id) !== req.params.id)) {
+                return res.status(400).send('Password has to be unique.');
+            }
+        }
         // Error message: email is already in use
         if (changes.email && users.some(i => String(i.email) === changes.email && String(i.id) !== req.params.id)) {
             return res.status(403).send("Email already in use");
@@ -171,7 +191,7 @@ exports.patchUser = (req, res) => {
         });
     } catch (err) {
         console.error('Update error: ', err);
-        res.status(400).send(err.message);
+        res.status(400).send(err.errorMessage || err.message);
     }
 }
 
@@ -190,12 +210,18 @@ exports.deleteUser = (req, res) => {
         // Update users
         writeUsers(users_updated)
 
+        // Remove all data related to the user
+        let tasks = JSON.parse(fs.readFileSync(TASKS_PATH, 'utf8'));
+        fs.writeFileSync(TASKS_PATH, JSON.stringify(tasks.filter(i => String(i.id_user) !== req.params.id), null, 2));
+        let tags = JSON.parse(fs.readFileSync(TAGS_PATH, 'utf8'));
+        fs.writeFileSync(TAGS_PATH, JSON.stringify(tags.filter(i => String(i.id_user) !== req.params.id), null, 2));
+
         // Response
         res.json ({
             message: `User with ID ${req.params.id} deleted`,
             user: deleted_user
         });
     } catch (err) {
-        res.status(400).send(err.message);
+        res.status(400).send(err.errorMessage || err.message);
     }
 }

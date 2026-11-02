@@ -22,5 +22,11 @@
     "name": "bye",
     "color": "#33d17a",
     "id_user": 2
+  },
+  {
+    "id": 5,
+    "name": "hgffds",
+    "color": "#563d7c",
+    "id_user": 3
   }
 ]
