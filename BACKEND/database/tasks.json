@@ -5,7 +5,7 @@
     "description": "",
     "due_date": "2026-10-31T00:00:00.000Z",
     "id_user": 1,
-    "status": "A",
+    "status": "F",
     "tags": [
       1
     ]
@@ -25,7 +25,7 @@
     "description": "",
     "due_date": "2026-11-01T00:00:00.000Z",
     "id_user": 1,
-    "status": "F",
+    "status": "A",
     "tags": []
   },
   {
@@ -54,7 +54,7 @@
     "description": "",
     "due_date": "2026-11-01T00:00:00.000Z",
     "id_user": 1,
-    "status": "A",
+    "status": "F",
     "tags": [
       2
     ]
@@ -87,7 +87,7 @@
     "description": "",
     "due_date": "2026-11-01T00:00:00.000Z",
     "id_user": 1,
-    "status": "A",
+    "status": "F",
     "tags": [
       1
     ]
@@ -100,5 +100,16 @@
     "id_user": 3,
     "status": "F",
     "tags": []
+  },
+  {
+    "id": 11,
+    "title": "Celebrate Day of the Dead w my daughter",
+    "description": "",
+    "due_date": "2026-11-02T00:00:00.000Z",
+    "id_user": 1,
+    "status": "A",
+    "tags": [
+      1
+    ]
   }
 ]

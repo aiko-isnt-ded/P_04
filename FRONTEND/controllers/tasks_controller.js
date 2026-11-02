@@ -202,6 +202,7 @@ const TASKS_PER_PAGE = 3;
 const widgetState = {
     todayPage: 1,
     labelPage: 1,
+    completedPage: 1,
     selectedTagId: null
 };
 
@@ -249,14 +250,19 @@ function buildTaskRow(task, tags) {
         checkbox = document.createElement('input'),
         badge = document.createElement('span');
 
-    // Activate checkboxes
+    // Activate checkboxes based on status
+    let finished = task.status === STATUS_FINISHED;
     checkbox.type = 'checkbox';
     checkbox.classList.add('form-check-input');
-    checkbox.addEventListener('change', () => {completeTask(task);});
+    checkbox.checked = finished;
+    checkbox.addEventListener('change', () => {
+        changeTaskStatus(task, finished ? STATUS_ACTIVE : STATUS_FINISHED);
+    });
     check_cell.append(checkbox);
 
     // Title and date
     title_cell.innerText = task.title;
+    if (finished) title_cell.classList.add('text-decoration-line-through');
     date_cell.innerText = formatDate(task.due_date);
 
     // Ensure tag is correct
@@ -316,8 +322,8 @@ function textColorFor(hex) {
     return luminance > 0.6 ? '#000000' : '#ffffff';
 }
 
-// Enabling checkbox to mark tasks as finished
-function completeTask(task) {
+// Change the status of a task
+function changeTaskStatus(task, new_status) {
     let user = getUser();
     if (!user) return;
 
@@ -329,7 +335,7 @@ function completeTask(task) {
             'x-auth': user.password
         },
         body: JSON.stringify({
-            status: STATUS_FINISHED
+            status: new_status
         })
     }).then(async response => {
         // Error occurred
@@ -507,6 +513,63 @@ function labelTasksWidget(page = widgetState.labelPage) {
     }).catch(err => {
         alert(err.message);
     });
+}
+
+// =======================
+// Completed Tasks Widget
+// =======================
+
+function completedTasksWidget(page = widgetState.completedPage) {
+    // Only run on the page that has the widget (tasks.html doesn't)
+    let table = document.getElementById('completedTasksTable'),
+        div = document.getElementById('completedTasks'),
+        empty = document.getElementById('emptyCompletedTasks'),
+        nav = document.getElementById('completedTasksPagination'),
+        pages = document.getElementById('completedTasksNavPages');
+        if (!table || !div || !empty || !nav || !pages) return;
+
+        // Get logged user
+        let user = getUser();
+        if (!user)return;
+
+        // Remember the current page
+        widgetState.completedPage = page;
+
+        // Filtered call
+        Promise.all([
+            readTasks({status: STATUS_FINISHED, page: page, limit: TASKS_PER_PAGE}),
+            readTags()
+        ]).then(([tasks_res, tags_res]) => {
+            let total_pages = Math.ceil(tasks_res.total / tasks_res.limit);
+
+            // Ensure pages are valid
+            if (total_pages > 0 && page > total_pages) {
+                completedTasksWidget(total_pages);
+                return;
+            }
+
+            // Pagination
+            buildPagination(nav, pages, page, total_pages, completedTasksWidget);
+
+            // Clear old rows
+            table.replaceChildren();
+
+            // No finished tasks
+            if (tasks_res.total === 0) {
+                div.classList.add('d-none');
+                empty.classList.remove('d-none');
+                return;
+            }
+            div.classList.remove('d-none');
+            empty.classList.add('d-none');
+
+            // Build the table
+            for (let i = 0; i < tasks_res.data.length; i++) {
+                table.append(buildTaskRow(tasks_res.data[i], tags_res.data));
+            }
+        }).catch(err => {
+            alert(err.message);
+        });
 }
 
 // =======================

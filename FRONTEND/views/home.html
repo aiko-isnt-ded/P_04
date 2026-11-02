@@ -239,7 +239,7 @@
                 <!-- Card Div 1 -->
                 <div class="col-12 col-md-6">
                     <!-- User Profile -->
-                    <div class="card overflow-y-auto" style="height: 45vh;">
+                    <div class="card overflow-y-auto" style="height: 43vh;">
                         <div class="card-body">
                             <!-- Card Title -->
                             <div class="border-bottom border-dark mb-2 border-2" style="border-color: #555 !important;">
@@ -270,7 +270,7 @@
 
                 <!-- Card Div 2 -->
                 <div class="col-12 col-md-6">
-                    <div class="card overflow-y-auto" style="height: 45vh;">
+                    <div class="card overflow-y-auto" style="height: 43vh;">
                         <div class="card-body d-flex flex-column">
 
                             <!-- Card Title -->
@@ -310,7 +310,7 @@
 
                 <!-- Card Div 3 -->
                 <div class="col-12 col-md-6">
-                    <div class="card overflow-y-auto" style="height: 45vh;">
+                    <div class="card overflow-y-auto" style="height: 43vh;">
                         <div class="card-body d-flex flex-column">
 
                             <!-- Card Title -->
@@ -355,8 +355,8 @@
 
                 <!-- Card Div 4 -->
                 <div class="col-12 col-md-6">
-                    <div class="card overflow-y-auto" style="height: 45vh;">
-                        <div class="card-body">
+                    <div class="card overflow-y-auto" style="height: 43vh;">
+                        <div class="card-body d-flex flex-column">
 
                             <!-- Card Title -->
                             <div class="border-bottom border-dark mb-2 border-2" style="border-color: #555 !important;">
@@ -364,7 +364,7 @@
                             </div>
                             
                             <!-- Completed Tasks -->
-                            <div class="d-flex align-items-center mb-2">
+                            <div class="mb-2" id="completedTasks">
                                 <table class="table table-hover table-success">
                                     <thead>
                                         <tr>
@@ -374,67 +374,24 @@
                                             <th scope="col">Date</th>
                                         </tr>
                                     </thead>
-
-                                    <tbody>
-                                        <tr>
-                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked></td>
-                                            <td class="text-decoration-line-through">Purchase Water</td>
-                                            <td><span class="badge rounded-pill bg-success">Home</span></td>
-                                            <td>06-09-2026</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked></td>
-                                            <td class="text-decoration-line-through">IyE Homework 6</td>
-                                            <td><span class="badge rounded-pill bg-primary">College</span></td>
-                                            <td>06-09-2026</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked></td>
-                                            <td class="text-decoration-line-through">IyE Homework 7</td>
-                                            <td><span class="badge rounded-pill bg-primary">College</span></td>
-                                            <td>06-09-2026</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked></td>
-                                            <td class="text-decoration-line-through">Gathering with Friends</td>
-                                            <td><span class="badge rounded-pill bg-warning text-dark">Social Life</span></td>
-                                            <td>05-09-2026</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked></td>
-                                            <td class="text-decoration-line-through">Resolve Tickets</td>
-                                            <td><span class="badge rounded-pill bg-danger">Work</span></td>
-                                            <td>04-09-2026</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked></td>
-                                            <td class="text-decoration-line-through">Informative Session</td>
-                                            <td><span class="badge rounded-pill bg-danger">Work</span></td>
-                                            <td>03-09-2026</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked></td>
-                                            <td class="text-decoration-line-through">OOP Homework 2</td>
-                                            <td><span class="badge rounded-pill bg-primary">College</span></td>
-                                            <td>02-09-2026</td>
-                                        </tr>
+                                    <!-- Space for tasks -->
+                                    <tbody id="completedTasksTable">
                                     </tbody>
                                 </table>
                             </div>
+                            <!-- No finished tasks -->
+                                <p class="text-center fw-bold mb-2 d-none" id="emptyCompletedTasks">No completed tasks yet</p>
+
+                                <!-- Pagination -->
+                                <nav class="d-none mt-auto" id="completedTasksPagination">
+                                    <ul class="pagination justify-content-center mb-0" id="completedTasksNavPages"></ul>
+                                </nav>
                         </div>
                     </div>
                 </div>
 
             </div>
-            
             <br>
-
         </main>
         <footer>
             <!-- place footer here -->

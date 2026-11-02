@@ -231,6 +231,7 @@ function init() {
     userSummary();
     todayTasksWidget();
     labelTasksWidget();
+    completedTasksWidget();
 }
 
 // =======================
