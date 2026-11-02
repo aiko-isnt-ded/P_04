@@ -9,22 +9,11 @@ function fillTagSelect() {
     let select = document.getElementById('newTaskLabel');
 
     // Find active user
-    let user = JSON.parse(sessionStorage.getItem('user'));
+    let user = getUser();
     if (!select || !user) return;
 
     // Get every tag
-    fetch(LOCAL_URL + 'tags?page=1&limit=200', {
-        method: 'GET',
-        headers: {
-            'x-auth': user.password
-        }
-    }).then(async response => {
-        if (!response.ok) {
-            let msg = await response.text();
-            throw new Error(msg || 'Error loading labels: ' + response.status);
-        }
-        return response.json();
-    }).then(data => {
+    readTags().then(data => {
         // Clear old options
         select.replaceChildren();
 
@@ -52,7 +41,7 @@ function createTask() {
     event.preventDefault();
 
     // Get logged user
-    let user = JSON.parse(sessionStorage.getItem('user'));
+    let user = getUser();
     if (!user) return;
 
     // Get inputs
@@ -112,6 +101,11 @@ const STATUS_ACTIVE = 'A';
 const STATUS_FINISHED = 'F';
 const STATUS_CANCELLED = 'C';
 
+// Get active user
+function getUser() {
+    return JSON.parse(sessionStorage.getItem('user'));
+}
+
 // Get today date
 function todayString() {
     let d = new Date();
@@ -123,13 +117,13 @@ function todayString() {
 // Read tasks, implementing all filters (status, today date, and tags)
 function readTasks(filters = {}) {
     // Get current user
-    let user = JSON.parse(sessionStorage.getItem('user'));
-    if (!user) return;
+    let user = getUser();
+    if (!user) return Promise.reject(new Error('No user logged in'));
 
-    // Get ALL tasks
+    // Get all tasks, which will later be filtered 
     let params = new URLSearchParams({page: 1, limit: 200, ...filters});
 
-    // Call post method
+    // Call get method
     return fetch(TASKS_URL + "?" + params.toString(), {
         method: 'GET',
         headers: {
@@ -162,7 +156,7 @@ function userSummary() {
     if (!completedElem || !pendingElem || !summaryElem) return;
 
     // Get logged user
-    let user = JSON.parse(sessionStorage.getItem('user'));
+    let user = getUser();
     if (!user) return;
 
     // Filter tasks
@@ -200,15 +194,96 @@ function userSummary() {
 }
 
 // =======================
-// Today Task's Widget
+// Pagination
 // =======================
 
 const TASKS_PER_PAGE = 3;
-let todayPage = 1;
+
+const widgetState = {
+    todayPage: 1,
+    labelPage: 1,
+    selectedTagId: null
+};
+
+// Build the pagination
+function buildPagination(nav, pages, page, total_pages, widget) {
+    // Clear old buttons
+    pages.replaceChildren();
+
+    // Show no pagination in case there's only 1 page
+    if (total_pages <= 1) {
+        nav.classList.add('d-none');
+        return;
+    }
+    nav.classList.remove('d-none');
+
+    // Add pagination buttons
+    function addButton(label, target, disabled, active) {
+        let li = document.createElement('li'),
+            btn = document.createElement('button');
+        li.classList.add('page-item');
+        if (disabled) li.classList.add('disabled');
+        if (active) li.classList.add('active');
+        btn.type = 'button';
+        btn.classList.add('page-link');
+        btn.innerText = label;
+        btn.addEventListener('click', () => {widget(target);});
+        li.append(btn);
+        pages.append(li);
+    }
+
+    addButton('«', page - 1, page === 1, false);
+    for (let i = 1; i <= total_pages; i++) {
+        addButton(String(i), i, false, i === page);
+    }
+    addButton('»', page + 1, page === total_pages, false);
+}
+
+// Build a row for a task
+function buildTaskRow(task, tags) {
+    let row = document.createElement('tr'),
+        check_cell = document.createElement('td'),
+        title_cell = document.createElement('td'),
+        tag_cell = document.createElement('td'),
+        date_cell = document.createElement('td'),
+        checkbox = document.createElement('input'),
+        badge = document.createElement('span');
+
+    // Activate checkboxes
+    checkbox.type = 'checkbox';
+    checkbox.classList.add('form-check-input');
+    checkbox.addEventListener('change', () => {completeTask(task);});
+    check_cell.append(checkbox);
+
+    // Title and date
+    title_cell.innerText = task.title;
+    date_cell.innerText = formatDate(task.due_date);
+
+    // Ensure tag is correct
+    let tag = tags.find(t => String(t.id) === String(task.tags[0]));
+    badge.classList.add('badge', 'rounded-pill');
+    if (tag) {
+        badge.innerText = tag.name;
+        badge.style.backgroundColor = tag.color;
+        badge.style.color = textColorFor(tag.color);
+    } else {
+        badge.classList.add('bg-secondary');
+        badge.innerText = 'No Label';
+    }
+    tag_cell.append(badge);
+
+    // Merge and return the row (task)
+    row.append(check_cell, title_cell, tag_cell, date_cell);
+    return row;
+}
+
+// =======================
+// Shared Widget Functions
+// =======================
 
 // Get every tag of the user
 function readTags() {
-    let user = JSON.parse(sessionStorage.getItem('user'));
+    let user = getUser();
     if (!user) return Promise.reject(new Error('No user logged in'));
 
     // Call get method
@@ -243,7 +318,7 @@ function textColorFor(hex) {
 
 // Enabling checkbox to mark tasks as finished
 function completeTask(task) {
-    let user = JSON.parse(sessionStorage.getItem('user'));
+    let user = getUser();
     if (!user) return;
 
     // Call update method
@@ -271,58 +346,26 @@ function completeTask(task) {
     });
 }
 
-// Build the pagination
-function buildTodayPagination(page, total_pages) {
-    let nav = document.getElementById('todayTasksPagination');
-    let pages = document.getElementById('todayTasksNavPages');
-
-    // Clear old buttons
-    pages.replaceChildren();
-
-    // In case there's only 1 page
-    if (total_pages <= 1) {
-        nav.classList.add('d-none');
-        return;
-    }
-    nav.classList.remove('d-none');
-
-    // Add pagination buttons
-    function addButton(label, target, disabled, active) {
-        let li = document.createElement('li'),
-            btn = document.createElement('button');
-        li.classList.add('page-item');
-        if (disabled) li.classList.add('disabled');
-        if (active) li.classList.add('active');
-        btn.type = 'button';
-        btn.classList.add('page-link');
-        btn.innerText = label;
-        btn.addEventListener('click', () => { todayTasksWidget(target); });
-        li.append(btn);
-        pages.append(li);
-    }
-
-    addButton('«', page - 1, page === 1, false);
-    for (let i = 1; i <= total_pages; i++) {
-        addButton(String(i), i, false, i === page);
-    }
-    addButton('»', page + 1, page === total_pages, false);
-}
+// =======================
+// Today Task's Widget
+// =======================
 
 // Build the widget
-function todayTasksWidget(page) {
+function todayTasksWidget(page = widgetState.todayPage) {
     // Only run on the page that has the widget (tasks.html doesn't)
     let table = document.getElementById('todayTasksTable');
     let div = document.getElementById('todayTasks');
     let empty = document.getElementById('emptyTodayTasksTable');
-    if (!table || !div || !empty) return;
+    let nav = document.getElementById('todayTasksPagination');
+    let pages = document.getElementById('todayTasksNavPages');
+    if (!table || !div || !empty || !nav || !pages) return;
 
     // Get logged user
-    let user = JSON.parse(sessionStorage.getItem('user'));
+    let user = getUser();
     if (!user) return;
 
-    // No page given
-    if (!page) page = todayPage;
-    todayPage = page;
+    // Get current page
+    widgetState.todayPage = page;
 
     // Filter call based on page (and tags
     Promise.all([
@@ -338,7 +381,9 @@ function todayTasksWidget(page) {
         }
 
         // Pagination
-        buildTodayPagination(page, total_pages);
+        buildPagination(
+            nav, pages, page, total_pages, todayTasksWidget
+        );
 
         // Clear old rows
         table.replaceChildren();
@@ -352,48 +397,19 @@ function todayTasksWidget(page) {
         div.classList.remove('d-none');
         empty.classList.add('d-none');
 
-        // Build rows in table
+        // Build today tasks table
         for (let i = 0; i < tasks_res.data.length; i++) {
-            let task = tasks_res.data[i],
-                row = document.createElement('tr'),
-                check_cell = document.createElement('td'),
-                title_cell = document.createElement('td'),
-                tag_cell = document.createElement('td'),
-                date_cell = document.createElement('td'),
-                checkbox = document.createElement('input'),
-                badge = document.createElement('span');
-
-            // Activate checkboxes
-            checkbox.type = 'checkbox';
-            checkbox.classList.add('form-check-input');
-            checkbox.addEventListener('change', () => {completeTask(task);});
-            check_cell.append(checkbox);
-
-            // Title and date
-            title_cell.innerText = task.title;
-            date_cell.innerText = formatDate(task.due_date);
-
-            // Ensure tag is correct
-            let tag = tags_res.data.find(t => String(t.id) === String(task.tags[0]));
-            badge.classList.add('badge', 'rounded-pill');
-            if (tag) {
-                badge.innerText = tag.name;
-                badge.style.backgroundColor = tag.color;
-                badge.style.color = textColorFor(tag.color);
-            } else {
-                badge.classList.add('bg-secondary');
-                badge.innerText = 'No Label';
-            }
-            tag_cell.append(badge);
-
-            // Merge rows
-            row.append(check_cell, title_cell, tag_cell, date_cell);
-            table.append(row);
+            table.append(buildTaskRow(tasks_res.data[i], tags_res.data));
         }
     }).catch(err => {
         alert(err.message);
     });
 }
+
+// =======================
+// Pending Tasks by Label
+// =======================
+
 
 
 // =======================
