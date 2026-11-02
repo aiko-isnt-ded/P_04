@@ -231,6 +231,7 @@ function init() {
     loadLabelsDropdown();
     userSummary();
     todayTasksWidget();
+    labelTasksWidget();
 }
 
 // =======================

@@ -41,6 +41,18 @@
                     width: 80px !important;
                 }
             }
+
+            /* Control the opacity of selected and non-selected labels */
+            .label-pill {
+                opacity: 0.5;
+                cursor: pointer;
+                transition: opacity 0.2s;
+            }
+
+            .label-pill.selected {
+                opacity: 1;
+            }
+
         </style>
 
         <!-- Icons -->
@@ -299,23 +311,21 @@
                 <!-- Card Div 3 -->
                 <div class="col-12 col-md-6">
                     <div class="card overflow-y-auto" style="height: 45vh;">
-                        <div class="card-body">
+                        <div class="card-body d-flex flex-column">
 
                             <!-- Card Title -->
                             <div class="border-bottom border-dark mb-2 border-2" style="border-color: #555 !important;">
                                 <p class="card-title fw-bold fs-3 mb-1">Pending Tasks by Label</p>
                             </div>
                             
-                            <!-- Fake Label Filter -->
-                            <div class="d-flex justify-content-evenly mb-2">
-                                <span class="badge rounded-pill bg-success" style="opacity: 0.6;">Home</span>
-                                <span class="badge rounded-pill bg-danger" style="opacity: 0.6;">Work</span>
-                                <span class="badge rounded-pill bg-primary">College</span>
-                                <span class="badge rounded-pill bg-warning text-dark" style="opacity: 0.6;">Social Life</span>
-                            </div>
+                            <!-- No labels created yet -->
+                            <p class="text-center fw-bold mb-2 d-none" id="noLabelsText">No labels yet</p>
 
+                            <!-- Filter: Label pills -->
+                            <div class="d-flex flex-wrap justify-content-evenly gap-2 mb-2 d-none" id="labelFilter"></div>
+                    
                             <!-- Pending Tasks by Label -->
-                            <div class="d-flex align-items-center mb-2">
+                            <div class="mb-2" id="labelTasks">
                                 <table class="table table-hover table-warning">
                                     <thead>
                                         <tr>
@@ -326,66 +336,18 @@
                                         </tr>
                                     </thead>
 
-                                    <tbody>
-                                        <tr>
-                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
-                                            <td>IyE Homework 8</td>
-                                            <td><span class="badge rounded-pill bg-primary">College</span></td>
-                                            <td>06-09-2026</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
-                                            <td>OOP Homework 3</td>
-                                            <td><span class="badge rounded-pill bg-primary">College</span></td>
-                                            <td>07-09-2026</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
-                                            <td>Web Homework 5</td>
-                                            <td><span class="badge rounded-pill bg-primary">College</span></td>
-                                            <td>07-09-2026</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
-                                            <td>Project Report</td>
-                                            <td><span class="badge rounded-pill bg-primary">College</span></td>
-                                            <td>08-09-2026</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
-                                            <td>AMIM Research</td>
-                                            <td><span class="badge rounded-pill bg-primary">College</span></td>
-                                            <td>08-09-2026</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
-                                            <td>Web Task Manager</td>
-                                            <td><span class="badge rounded-pill bg-primary">College</span></td>
-                                            <td>09-09-2026</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
-                                            <td>Web Homework 6</td>
-                                            <td><span class="badge rounded-pill bg-primary">College</span></td>
-                                            <td>09-09-2026</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
-                                            <td>IyE Homework 9</td>
-                                            <td><span class="badge rounded-pill bg-primary">College</span></td>
-                                            <td>13-09-2026</td>
-                                        </tr>
+                                    <!-- Tasks Data :) -->
+                                    <tbody id="labelTasksTable">
                                     </tbody>
                                 </table>
-
                             </div>
+                            <!-- Selected label has no tasks -->
+                            <p class="text-center fw-bold mb-2 d-none" id="emptyLabelTasks">No tasks to show</p>
+                        
+                            <!-- Pagination -->
+                            <nav class="d-none mt-auto" id="labelTasksPagination">
+                                <ul class="pagination justify-content-center mb-0" id="labelTasksNavPages"></ul>
+                            </nav>
                         </div>
                     </div>
                 </div>

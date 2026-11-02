@@ -25,7 +25,7 @@
     "description": "",
     "due_date": "2026-11-01T00:00:00.000Z",
     "id_user": 1,
-    "status": "A",
+    "status": "F",
     "tags": []
   },
   {
@@ -43,7 +43,7 @@
     "description": "",
     "due_date": "2026-11-01T00:00:00.000Z",
     "id_user": 1,
-    "status": "A",
+    "status": "F",
     "tags": [
       1
     ]
@@ -65,9 +65,31 @@
     "description": "",
     "due_date": "2026-11-01T00:00:00.000Z",
     "id_user": 2,
-    "status": "A",
+    "status": "F",
     "tags": [
       3
+    ]
+  },
+  {
+    "id": 8,
+    "title": "hi",
+    "description": "",
+    "due_date": "2026-11-01T00:00:00.000Z",
+    "id_user": 1,
+    "status": "F",
+    "tags": [
+      1
+    ]
+  },
+  {
+    "id": 9,
+    "title": "hi2",
+    "description": "",
+    "due_date": "2026-11-01T00:00:00.000Z",
+    "id_user": 1,
+    "status": "A",
+    "tags": [
+      1
     ]
   }
 ]

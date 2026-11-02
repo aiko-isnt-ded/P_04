@@ -410,7 +410,104 @@ function todayTasksWidget(page = widgetState.todayPage) {
 // Pending Tasks by Label
 // =======================
 
+function labelTasksWidget(page = widgetState.labelPage) {
+    // Only run on the page that has the widget (tasks.html doesn't)
+    let filter = document.getElementById('labelFilter');
+    let div = document.getElementById('labelTasks');
+    let table = document.getElementById('labelTasksTable');
+    let noLabels = document.getElementById('noLabelsText');
+    let empty = document.getElementById('emptyLabelTasks');
+    let nav = document.getElementById('labelTasksPagination');
+    let pages = document.getElementById('labelTasksNavPages');
+    if (!filter || !div || !table || !noLabels || !empty || !nav || !pages) return;
 
+    // Get logged user
+    let user = getUser();
+    if (!user) return;
+
+    // Read Tags
+    readTags().then(tags_res => {
+        let tags = tags_res.data;
+
+        // If there's no labels, show only a text indicating so
+        if (tags.length === 0) {
+            filter.classList.add('d-none');
+            div.classList.add('d-none');
+            empty.classList.add('d-none');
+            nav.classList.add('d-none');
+            noLabels.classList.remove('d-none');
+            return;
+        }
+        noLabels.classList.add('d-none');
+        filter.classList.remove('d-none');
+
+        // In case tag was deleted or doesn't exist
+        if (!tags.some(t => String(t.id) === String(widgetState.selectedTagId))) {
+            widgetState.selectedTagId = tags[0].id;
+            page = 1;
+        }
+
+        // Remember the current page
+        widgetState.labelPage = page;
+        
+        // Build the filter
+        filter.replaceChildren();
+        for (let i = 0; i < tags.length; i++) {
+            let tag = tags[i],
+                pill = document.createElement('span');
+            pill.classList.add('badge', 'rounded-pill', 'label-pill');
+            if (String(tag.id) === String(widgetState.selectedTagId)) pill.classList.add('selected');
+            pill.innerText = tag.name;
+            pill.style.backgroundColor = tag.color;
+            pill.style.color = textColorFor(tag.color);
+
+            // Reload data if user selects another label
+            pill.addEventListener('click', () => {
+                widgetState.selectedTagId = tag.id;
+                labelTasksWidget(1);
+            });
+            filter.append(pill);
+        }
+
+        // Build the goddamn table
+        return readTasks({
+            tag: widgetState.selectedTagId,
+            status: STATUS_ACTIVE,
+            page: page,
+            limit: TASKS_PER_PAGE
+        }).then(tasks_res => {
+            let total_pages = Math.ceil(tasks_res.total / tasks_res.limit);
+
+            // Ensure pages are valid
+            if (total_pages > 0 && page > total_pages) {
+                labelTasksWidget(total_pages);
+                return;
+            }
+
+            // Pagination
+            buildPagination(nav, pages, page, total_pages, labelTasksWidget);
+
+            // Clear old rows
+            table.replaceChildren();
+
+            // No pending tasks on label
+            if (tasks_res.total === 0) {
+                div.classList.add('d-none');
+                empty.classList.remove('d-none');
+                return;
+            }
+            div.classList.remove('d-none');
+            empty.classList.add('d-none');
+
+            // Build the table
+            for (let i = 0; i < tasks_res.data.length; i++) {
+                table.append(buildTaskRow(tasks_res.data[i], tags));
+            }
+        });
+    }).catch(err => {
+        alert(err.message);
+    });
+}
 
 // =======================
 // Execute Functions

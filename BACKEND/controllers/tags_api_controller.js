@@ -30,8 +30,8 @@ function readUsers() {
 }
 
 // Write functions
-function writeTags(users) {
-    fs.writeFileSync(TAGS_PATH, JSON.stringify(users, null, 2));
+function writeTags(tags) {
+    fs.writeFileSync(TAGS_PATH, JSON.stringify(tags, null, 2));
 }
 
 // =======================
@@ -95,8 +95,8 @@ exports.userTags = (req, res) => {
         // Read tags
         let tags = readTags();
 
-        let page = parseInt(req.query.page);
-        let limit = parseInt(req.query.limit);
+        let page = parseInt(req.query.page)  || 1;
+        let limit = parseInt(req.query.limit) || 10;
 
         // Get user tags
         let user_tags = tags.filter(i => String(i.id_user) === String(req.user.id));
@@ -109,7 +109,7 @@ exports.userTags = (req, res) => {
             page: page,
             next_page: page + 1,
             limit: limit,
-            total: tags.length,
+            total: user_tags.length,
             data: user_tags.slice(start, end)
         });
     } catch(err) {
@@ -203,7 +203,7 @@ exports.deleteTag = (req, res) => {
         let deleted_tag = tags[index];
 
         // Check if tag is used by any task
-        let tag_used = tasks.some(i => Array.isArray(i.tags) && i.tags.some(j => j === tag_id)); 
+        let tag_used = tasks.some(i => Array.isArray(i.tags) && i.tags.some(j => String(j) === String(deleted_tag.id)));
         if (tag_used) return res.status(400).send('Tag is in use by a task and CANNOT be deleted');
 
         // Remove if tag isn't being used

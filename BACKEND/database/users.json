@@ -12,5 +12,12 @@
     "email": "yjh@kimcom.com",
     "password": "supreme-king",
     "joined_at": "2026-10-29T23:02:37.646Z"
+  },
+  {
+    "id": 3,
+    "name": "test",
+    "email": "test@test.com",
+    "password": "123456789",
+    "joined_at": "2026-11-02T04:45:23.546Z"
   }
 ]
