@@ -47,8 +47,7 @@ function createTag() {
         let b_modal = bootstrap.Modal.getInstance(modal);
         if (b_modal) b_modal.hide();
 
-        // Send alert
-        alert(data.message);
+        // Refresh
         init();
     }).catch(err => {
         alert(err.message);
@@ -156,8 +155,7 @@ function deleteTag() {
         // Clear the selected tag
         tagToEdit = null;
 
-        // Send alert and refresh data
-        alert(data.message);
+        // Refresh data
         init();
     }).catch(err => {
         alert(err.message);
