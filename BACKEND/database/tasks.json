@@ -5,19 +5,21 @@
     "description": "",
     "due_date": "2026-10-31T00:00:00.000Z",
     "id_user": 1,
-    "status": "F",
+    "status": "A",
     "tags": [
       1
     ]
   },
   {
     "id": 2,
-    "title": "test",
+    "title": "Try out a new strategy",
     "description": "",
-    "due_date": "2026-10-22T00:00:00.000Z",
+    "due_date": "2026-11-02",
     "id_user": 1,
     "status": "A",
-    "tags": []
+    "tags": [
+      2
+    ]
   },
   {
     "id": 3,
@@ -25,7 +27,7 @@
     "description": "",
     "due_date": "2026-11-01T00:00:00.000Z",
     "id_user": 1,
-    "status": "A",
+    "status": "F",
     "tags": []
   },
   {
@@ -34,7 +36,7 @@
     "description": "",
     "due_date": "2026-11-01T00:00:00.000Z",
     "id_user": 1,
-    "status": "A",
+    "status": "F",
     "tags": []
   },
   {
@@ -72,20 +74,9 @@
   },
   {
     "id": 8,
-    "title": "hi",
+    "title": "Bake with Biyoo",
     "description": "",
-    "due_date": "2026-11-01T00:00:00.000Z",
-    "id_user": 1,
-    "status": "F",
-    "tags": [
-      1
-    ]
-  },
-  {
-    "id": 9,
-    "title": "hi2",
-    "description": "",
-    "due_date": "2026-11-01T00:00:00.000Z",
+    "due_date": "2026-11-01",
     "id_user": 1,
     "status": "F",
     "tags": [
@@ -110,6 +101,28 @@
     "status": "A",
     "tags": [
       1
+    ]
+  },
+  {
+    "id": 12,
+    "title": "Help Sooyoung with her new novel",
+    "description": "",
+    "due_date": "2026-11-02T00:00:00.000Z",
+    "id_user": 1,
+    "status": "F",
+    "tags": [
+      2
+    ]
+  },
+  {
+    "id": 13,
+    "title": "Take a stroll around town",
+    "description": "",
+    "due_date": "2026-11-02T00:00:00.000Z",
+    "id_user": 1,
+    "status": "A",
+    "tags": [
+      2
     ]
   }
 ]

@@ -206,7 +206,8 @@ function loadLabelsDropdown() {
 
             // bootstrap shit
             tag_container.classList.add('dropdown-item', 'd-flex', 'justify-content-between', 'align-items-center');
-            tag_container.href = '#';
+            // Clicking a label redirects to tasks page
+            tag_container.href = '/views/tasks.html?tag=' + tag.id;
             tag_container.innerText = tag.name;
 
             // more bootstrap shit for the icon
@@ -232,6 +233,7 @@ function init() {
     todayTasksWidget();
     labelTasksWidget();
     completedTasksWidget();
+    allTasksTable();
 }
 
 // =======================

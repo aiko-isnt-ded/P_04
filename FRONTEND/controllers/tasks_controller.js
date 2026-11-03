@@ -3,17 +3,9 @@
 // =======================
 const TASKS_URL = LOCAL_URL + 'tasks';
 
-// Fill tags
-function fillTagSelect() {
-    // Find select HTML
-    let select = document.getElementById('newTaskLabel');
-
-    // Find active user
-    let user = getUser();
-    if (!select || !user) return;
-
-    // Get every tag
-    readTags().then(data => {
+// Load the user tags and no tags
+function loadTagOptions(select, selectedId = '') {
+    return readTags().then(tags_res => {
         // Clear old options
         select.replaceChildren();
 
@@ -24,16 +16,33 @@ function fillTagSelect() {
         select.append(none_option);
 
         // Allow one tag selection
-        for (let i = 0; i < data.data.length; i++) {
-            let tag = data.data[i],
+        for (let i = 0; i < tags_res.data.length; i++) {
+            let tag = tags_res.data[i],
                 option = document.createElement('option');
             option.value = tag.id;
             option.innerText = tag.name;
             select.append(option);
         }
-    }).catch(err => {
+
+        // Select the current label
+        select.value = (selectedId === undefined || selectedId === null ? '' : String(selectedId));
+    });
+}
+
+// Fill the label of the new task modal
+function fillTagSelect() {
+    let select = document.getElementById('newTaskLabel');
+    if (!select || !getUser()) return;
+
+    loadTagOptions(select).catch(err => {
         alert(err.message);
     });
+}
+
+// Default values when creating tasks
+function prepareNewTask() {
+    document.getElementById('newTaskDate').value = todayString();
+    fillTagSelect();
 }
 
 // Create task
@@ -85,8 +94,7 @@ function createTask() {
         let b_modal = bootstrap.Modal.getInstance(modal);
         if (b_modal) b_modal.hide();
 
-        // Send alert and refresh page state
-        alert(data.message);
+        // Refresh page 
         init();
     }).catch(err => {
         alert(err.message);
@@ -198,12 +206,15 @@ function userSummary() {
 // =======================
 
 const TASKS_PER_PAGE = 3;
+const ALL_TASKS_PER_PAGE = 10;
 
 const widgetState = {
     todayPage: 1,
     labelPage: 1,
     completedPage: 1,
-    selectedTagId: null
+    selectedTagId: null,
+    tasksPage: 1,
+    tasksTagId: null
 };
 
 // Build the pagination
@@ -241,7 +252,7 @@ function buildPagination(nav, pages, page, total_pages, widget) {
 }
 
 // Build a row for a task
-function buildTaskRow(task, tags) {
+function buildTaskRow(task, tags, withActions = false) {
     let row = document.createElement('tr'),
         check_cell = document.createElement('td'),
         title_cell = document.createElement('td'),
@@ -256,7 +267,7 @@ function buildTaskRow(task, tags) {
     checkbox.classList.add('form-check-input');
     checkbox.checked = finished;
     checkbox.addEventListener('change', () => {
-        changeTaskStatus(task, finished ? STATUS_ACTIVE : STATUS_FINISHED);
+        updateTask(task, {status: finished ? STATUS_ACTIVE : STATUS_FINISHED});
     });
     check_cell.append(checkbox);
 
@@ -280,6 +291,40 @@ function buildTaskRow(task, tags) {
 
     // Merge and return the row (task)
     row.append(check_cell, title_cell, tag_cell, date_cell);
+    
+    // Actions column (edit, delete)
+    if (withActions) {
+        let actions_cell = document.createElement('td'),
+            actions_div = document.createElement('div'),
+            edit_btn = document.createElement('span'),
+            edit_icon = document.createElement('i'),
+            delete_btn = document.createElement('span'),
+            delete_icon = document.createElement('i');
+
+        actions_div.classList.add('d-flex', 'justify-content-evenly');
+
+        // Edit Icon
+        edit_icon.classList.add('fas', 'fa-pen');
+        edit_icon.style.fontSize = '20px';
+        edit_icon.style.color = 'blue';
+        edit_btn.style.cursor = 'pointer';
+        edit_btn.addEventListener('click', () => { editTaskModal(task); });
+
+        // Delete Icon
+        delete_icon.classList.add('fas', 'fa-trash');
+        delete_icon.style.fontSize = '20px';
+        delete_icon.style.color = 'red';
+        delete_btn.style.cursor = 'pointer';
+        delete_btn.addEventListener('click', () => { deleteTaskModal(task); });
+
+        // Add buttons
+        edit_btn.append(edit_icon);
+        delete_btn.append(delete_icon);
+        actions_div.append(edit_btn, delete_btn);
+        actions_cell.append(actions_div);
+        row.append(actions_cell);
+    }
+    
     return row;
 }
 
@@ -322,34 +367,19 @@ function textColorFor(hex) {
     return luminance > 0.6 ? '#000000' : '#ffffff';
 }
 
-// Change the status of a task
-function changeTaskStatus(task, new_status) {
-    let user = getUser();
-    if (!user) return;
-
-    // Call update method
-    fetch(TASKS_URL + '/' + task.id, {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json',
-            'x-auth': user.password
-        },
-        body: JSON.stringify({
-            status: new_status
-        })
-    }).then(async response => {
-        // Error occurred
-        if (!response.ok) {
-            let msg = await response.text();
-            throw new Error(msg || 'Task update failed: ' + response.status);
-        }
-        return response.json();
-    }).then(data => {
-        init();
-    }).catch(err => {
-        alert(err.message);
-        init();
-    });
+function buildLabelPills(filter, tags, selectedId, onSelect) {
+    filter.replaceChildren();
+    for (let i = 0; i < tags.length; i++) {
+        let tag = tags[i],
+            pill = document.createElement('span');
+        pill.classList.add('badge', 'rounded-pill', 'label-pill');
+        if (String(tag.id) === String(selectedId)) pill.classList.add('selected');
+        pill.innerText = tag.name;
+        pill.style.backgroundColor = tag.color;
+        pill.style.color = textColorFor(tag.color);
+        pill.addEventListener('click', () => { onSelect(tag); });
+        filter.append(pill);
+    }
 }
 
 // =======================
@@ -457,23 +487,10 @@ function labelTasksWidget(page = widgetState.labelPage) {
         widgetState.labelPage = page;
         
         // Build the filter
-        filter.replaceChildren();
-        for (let i = 0; i < tags.length; i++) {
-            let tag = tags[i],
-                pill = document.createElement('span');
-            pill.classList.add('badge', 'rounded-pill', 'label-pill');
-            if (String(tag.id) === String(widgetState.selectedTagId)) pill.classList.add('selected');
-            pill.innerText = tag.name;
-            pill.style.backgroundColor = tag.color;
-            pill.style.color = textColorFor(tag.color);
-
-            // Reload data if user selects another label
-            pill.addEventListener('click', () => {
-                widgetState.selectedTagId = tag.id;
-                labelTasksWidget(1);
-            });
-            filter.append(pill);
-        }
+        buildLabelPills(filter, tags, widgetState.selectedTagId, tag => {
+            widgetState.selectedTagId = tag.id;
+            labelTasksWidget(1);
+        });
 
         // Build the goddamn table
         return readTasks({
@@ -573,18 +590,258 @@ function completedTasksWidget(page = widgetState.completedPage) {
 }
 
 // =======================
+// All Tasks List
+// =======================
+
+function allTasksTable(page = widgetState.tasksPage) {
+    // Only run on the page that has the table (home.html doesn't)
+    let filter = document.getElementById('allTasksFilter'),
+        div = document.getElementById('allTasks'),
+        table = document.getElementById('allTasksTable'),
+        empty = document.getElementById('emptyAllTasks'),
+        nav = document.getElementById('allTasksPagination'),
+        pages = document.getElementById('allTasksNavPages');
+    if (!filter || !div || !table || !empty || !nav || !pages) return;
+
+    // Get logged user
+    let user = getUser();
+    if (!user) return;
+
+    // Read the tags
+    readTags().then(tags_res => {
+        let tags = tags_res.data;
+
+        // Selected label no longer exists
+        if (widgetState.tasksTagId !== null && !tags.some(t => String(t.id) === String(widgetState.tasksTagId))) {
+            widgetState.tasksTagId = null;
+            page = 1;
+        }
+
+        // Remember current page
+        widgetState.tasksPage = page;
+
+        // Label filter (hidden if there are no labels)
+        if (tags.length === 0) {
+            filter.classList.add('d-none');
+        } 
+        // If there are labels
+        else {
+            filter.classList.remove('d-none');
+
+            // Clicking the selected label again removes the filter
+            buildLabelPills(filter, tags, widgetState.tasksTagId, tag => {
+                let same = String(widgetState.tasksTagId) === String(tag.id);
+                widgetState.tasksTagId = same ? null : tag.id;
+                allTasksTable(1);
+            });
+        }
+
+        // Manage calls based on filter vs no filter
+        let filters = {page: page, limit: ALL_TASKS_PER_PAGE};
+        if (widgetState.tasksTagId !== null) filters.tag = widgetState.tasksTagId;
+
+        return readTasks(filters).then(tasks_res => {
+            let total_pages = Math.ceil(tasks_res.total / tasks_res.limit);
+
+            // Ensure pages are valid
+            if (total_pages > 0 && page > total_pages) {
+                allTasksTable(total_pages);
+                return;
+            }
+
+            // Pagination
+            buildPagination(nav, pages, page, total_pages, allTasksTable);
+        
+            // Clear old rows
+            table.replaceChildren();
+
+            // In case there are no tasks: empty table
+            if (tasks_res.total === 0) {
+                div.classList.add('d-none');
+                empty.classList.remove('d-none');
+                return;
+            }
+            div.classList.remove('d-none');
+            empty.classList.add('d-none');
+
+            // Build the fuckass table
+            for (let i = 0; i < tasks_res.data.length; i++) {
+                table.append(buildTaskRow(tasks_res.data[i], tags, true));
+            }
+        });
+    }).catch(err => {
+        alert(err.message);
+    });
+}
+
+// =======================
+// Update
+// =======================
+
+function updateTask(task, changes) {
+    let user = getUser();
+    if (!user) return Promise.resolve(false);
+
+    // Call the patch method
+    return fetch(TASKS_URL + '/' + task.id, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'x-auth': user.password
+        },
+        body: JSON.stringify(changes)
+    }).then(async response => {
+        if (!response.ok) {
+            let msg = await response.text();
+            throw new Error(msg || 'Task update failed: ' + response.status);
+        }
+        return response.json();
+    }).then(data => {
+        init()
+        return true;
+    }).catch(err => {
+        alert(err.message);
+        init();
+        return false;
+    });
+}
+
+let taskToEdit = null;
+
+// Modal to Update a Task
+function editTaskModal(task) {
+    // Remember the task to edit
+    taskToEdit = task;
+
+    // Fill the form
+    document.getElementById('editTaskName').value = task.title;
+    document.getElementById('editTaskDate').value = String(task.due_date).slice(0, 10);
+
+    // Fill the labels
+    let select = document.getElementById('editTaskLabel');
+    loadTagOptions(select, task.tags[0]).then(() => {
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('editTask')).show();
+    }).catch(err => {
+        alert(err.message);
+    });
+}
+
+// Button to save changes
+function saveTaskChanges() {
+    event.preventDefault();
+    if (!taskToEdit) return;
+
+    // Get inputs
+    let nameInput = document.getElementById('editTaskName');
+    let dateInput = document.getElementById('editTaskDate');
+    let labelInput = document.getElementById('editTaskLabel');
+
+    // Validate fields
+    if (!nameInput.reportValidity()) return;
+    if (!dateInput.reportValidity()) return;
+
+    // Only one tag per task, or empty
+    let tags = labelInput.value === '' ? [] : [Number(labelInput.value)];
+
+    // Call the update function
+    updateTask(taskToEdit, {
+        title: nameInput.value.trim(),
+        due_date: dateInput.value,
+        tags: tags
+    }).then(ok => {
+        // Modal stays open in case of error
+        if (!ok) return;
+
+        // Close modal and clear the selected task
+        let modal = document.getElementById('editTask');
+        let b_modal = bootstrap.Modal.getInstance(modal);
+        if (b_modal) b_modal.hide();
+        taskToEdit = null;
+    });
+}
+
+// =======================
+// Delete
+// =======================
+
+// Current task to be deleted
+let taskToDelete = null;
+
+// Open the delete modal
+function deleteTaskModal(task) {
+    // Remember task
+    taskToDelete = task;
+
+    // Show task title
+    document.getElementById('deleteTaskName').innerText = task.title;
+
+    // Launch modal
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('deleteTask')).show();
+}
+
+// Delete task
+function deleteTask() {
+    event.preventDefault();
+
+    // Get logged user
+    let user = getUser();
+    if (!user || !taskToDelete) return;
+
+    // Call delete method
+    fetch(TASKS_URL + '/' + taskToDelete.id, {
+        method: 'DELETE',
+        headers: {
+            'x-auth': user.password
+        }
+    }).then(async response => {
+        // Error occurred
+        if (!response.ok) {
+            let msg = await response.text();
+            throw new Error(msg || 'Task deletion failed: ' + response.status);
+        }
+        return response.json();
+    }).then(data => {
+        // Close modal
+        let modal = document.getElementById('deleteTask');
+        let b_modal = bootstrap.Modal.getInstance(modal);
+        if (b_modal) b_modal.hide();
+
+        // Clear selected task and refresh
+        taskToDelete = null;
+        init();
+    }).catch(err => {
+        alert(err.message);
+    })
+}
+
+// =======================
 // Execute Functions
 // =======================
 
 // Search for forms and buttons
 const newTaskModal = document.getElementById('newTask');
 const bttnCreateTask = document.getElementById('bttn_create_task');
+const urlTag = new URLSearchParams(window.location.search).get('tag');
+const bttnUpdateTask = document.getElementById('bttn_update_task');
+const bttnDeleteTask = document.getElementById('bttn_delete_task');
 
 // Route functions based on actions
 if (newTaskModal) {
-    newTaskModal.addEventListener('show.bs.modal', fillTagSelect);
+    newTaskModal.addEventListener('show.bs.modal', prepareNewTask);
 }
 
 if (bttnCreateTask) {
     bttnCreateTask.addEventListener('click', createTask);
+}
+
+if (urlTag) {
+    widgetState.tasksTagId = urlTag;
+}
+
+if (bttnUpdateTask) {
+    bttnUpdateTask.addEventListener('click', saveTaskChanges);
+}
+
+if (bttnDeleteTask) {
+    bttnDeleteTask.addEventListener('click', deleteTask);
 }
